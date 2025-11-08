@@ -1,4 +1,7 @@
-﻿using IPA.Utilities;
+﻿using CompCube_Models.Models.ClientData;
+using CompCube_Models.Models.Map;
+using CompCube_Models.Models.Server;
+using IPA.Utilities;
 using LoungeSaber.Interfaces;
 using LoungeSaber.Models.Events;
 using LoungeSaber.Models.Map;
@@ -17,21 +20,21 @@ public class DebugApi : IApi
         new("44d8d1c7c5821a7f1929542cab49c906c9e585e4", VotingMap.DifficultyType.ExpertPlus, "Extreme")
     ];
 
-    public static readonly Models.UserInfo.UserInfo DebugOpponent = new("debugOpponent", "1", 1000,
-        new DivisionInfo("Iron", 4, "#111111"), new Badge("test", "#111111", false), 2, null,
+    public static readonly CompCube_Models.Models.ClientData.UserInfo DebugOpponent = new("debugOpponent", "1", 1000,
+        new DivisionInfo("Iron", 4, "#111111", false), new Badge("test", "#111111", false), 2, null,
         false);
 
-    public static readonly Models.UserInfo.UserInfo Self = new(
+    public static readonly CompCube_Models.Models.ClientData.UserInfo Self = new(
         "self",
         "",
         1000,
-        new DivisionInfo("Iron", 1, "#000000"),
+        new DivisionInfo("Iron", 1, "#000000", false),
         null,
         1,
         null,
         false);
     
-    public Task<Models.UserInfo.UserInfo> GetUserInfo(string id)
+    public Task<CompCube_Models.Models.ClientData.UserInfo> GetUserInfo(string id)
     {
         return Task.FromResult(Self);
     }

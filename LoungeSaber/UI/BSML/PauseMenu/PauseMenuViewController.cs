@@ -40,7 +40,7 @@ public class PauseMenuViewController : BSMLAutomaticViewController, IInitializab
 
     private void Resumed() => _floatingScreen.gameObject.SetActive(false);
 
-    public void PopulateData(DateTime time, Models.UserInfo.UserInfo opponent)
+    public void PopulateData(DateTime time, CompCube_Models.Models.ClientData.UserInfo opponent)
     {
         _matchStartingTime = time;
         

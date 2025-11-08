@@ -1,6 +1,8 @@
-﻿using IPA.Loader;
+﻿using CompCube_Models.Models.Map;
+using IPA.Loader;
 using JetBrains.Annotations;
 using LoungeSaber.Configuration;
+using LoungeSaber.Extensions;
 using LoungeSaber.Models.Map;
 using LoungeSaber.UI.BSML.PauseMenu;
 using SiraUtil.Logging;
@@ -22,7 +24,7 @@ namespace LoungeSaber.Game
         
         private Action _menuSwitchCallback = null;
         
-        public void StartMatch(VotingMap level, DateTime unpauseTime, bool proMode, Models.UserInfo.UserInfo opponent, Action<LevelCompletionResults, StandardLevelScenesTransitionSetupDataSO> onLevelCompletedCallback)
+        public void StartMatch(VotingMap level, DateTime unpauseTime, bool proMode, CompCube_Models.Models.ClientData.UserInfo opponent, Action<LevelCompletionResults, StandardLevelScenesTransitionSetupDataSO> onLevelCompletedCallback)
         {
             if (InMatch) 
                 return;
@@ -103,7 +105,7 @@ namespace LoungeSaber.Game
             _menuSwitchCallback = null;
         }
 
-        private async void AfterSceneSwitchToGameplayCallback(DiContainer diContainer, DateTime unpauseTime, Models.UserInfo.UserInfo opponent)
+        private async void AfterSceneSwitchToGameplayCallback(DiContainer diContainer, DateTime unpauseTime, CompCube_Models.Models.ClientData.UserInfo opponent)
         {
             try
             {

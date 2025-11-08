@@ -1,0 +1,6 @@
+[submodule "LoungeSaber-Server/Models"]
+	path = LoungeSaber-Server/Models
+	url = https://github.com/NotBela/CompCube-Models.git
+[submodule "LoungeSaber/Models"]
+	path = LoungeSaber/Models
+	url = https://github.com/NotBela/CompCube-Models.git

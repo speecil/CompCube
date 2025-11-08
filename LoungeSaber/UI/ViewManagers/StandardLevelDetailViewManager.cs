@@ -1,4 +1,5 @@
-﻿using HMUI;
+﻿using CompCube_Models.Models.Map;
+using HMUI;
 using LoungeSaber.Models.Map;
 using Zenject;
 
