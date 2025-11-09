@@ -15,8 +15,8 @@ using Zenject;
 
 namespace CompCube.UI.BSML.Leaderboard
 {
-    [ViewDefinition("CompCube.UI.BSML.Leaderboard.LoungeSaberLeaderboardView.bsml")]
-    public class LoungeSaberLeaderboardViewController : BSMLAutomaticViewController, IInitializable
+    [ViewDefinition("CompCube.UI.BSML.Leaderboard.LeaderboardView.bsml")]
+    public class LeaderboardViewController : BSMLAutomaticViewController, IInitializable
     {
         [Inject] private readonly PlatformLeaderboardViewController _platformLeaderboardViewController = null;
         [Inject] private readonly IApi _api = null;

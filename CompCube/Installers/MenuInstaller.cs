@@ -38,9 +38,9 @@ namespace CompCube.Installers
             Container.BindInterfacesAndSelfTo<InfoViewController>().FromNewComponentAsViewController().AsSingle();
             Container.BindInterfacesAndSelfTo<MatchResultsViewController>().FromNewComponentAsViewController()
                 .AsSingle();
-            Container.BindInterfacesAndSelfTo<LoungeSaberSettingsViewController>().FromNewComponentAsViewController()
+            Container.BindInterfacesAndSelfTo<SettingsViewController>().FromNewComponentAsViewController()
                 .AsSingle();
-            Container.BindInterfacesAndSelfTo<LoungeSaberLeaderboardViewController>().FromNewComponentAsViewController().AsSingle();
+            Container.BindInterfacesAndSelfTo<UI.BSML.Leaderboard.LeaderboardViewController>().FromNewComponentAsViewController().AsSingle();
             Container.BindInterfacesAndSelfTo<CantConnectToServerViewController>().FromNewComponentAsViewController().AsSingle();
             Container.BindInterfacesAndSelfTo<CheckingServerStatusViewController>().FromNewComponentAsViewController().AsSingle();
             Container.BindInterfacesAndSelfTo<MissingMapsViewController>().FromNewComponentAsViewController().AsSingle();

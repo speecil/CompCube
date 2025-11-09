@@ -8,8 +8,8 @@ using Zenject;
 
 namespace CompCube.UI.BSML.Settings;
 
-[ViewDefinition("CompCube.UI.BSML.Settings.LoungeSaberSettingsView.bsml")]
-public class LoungeSaberSettingsViewController : BSMLAutomaticViewController, IInitializable, IDisposable
+[ViewDefinition("CompCube.UI.BSML.Settings.SettingsView.bsml")]
+public class SettingsViewController : BSMLAutomaticViewController, IInitializable, IDisposable
 {
     [Inject] private readonly BSMLSettings _bsmlSettings = null;
     [Inject] private readonly PluginConfig _config = null;
@@ -81,7 +81,7 @@ public class LoungeSaberSettingsViewController : BSMLAutomaticViewController, II
     [UIAction("invalidValueModalOkButtonOnClick")]
     private void OkButtonOnClick() => _parserParams.EmitEvent("invalidValueModalHide");
 
-    public void Initialize() => _bsmlSettings.AddSettingsMenu("CompCube", "CompCube.UI.BSML.Settings.LoungeSaberSettingsView.bsml", this);
+    public void Initialize() => _bsmlSettings.AddSettingsMenu("CompCube", "CompCube.UI.BSML.Settings.SettingsView.bsml", this);
 
     public void Dispose() => _bsmlSettings.RemoveSettingsMenu(this);
 }

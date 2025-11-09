@@ -14,7 +14,7 @@ namespace CompCube.UI.BSML.Leaderboard;
 [ViewDefinition("CompCube.UI.BSML.Leaderboard.RankingDataTabSwitcherView.bsml")]
 public class RankingDataTabSwitcherViewController : BSMLAutomaticViewController
 {
-    [Inject] private readonly LoungeSaberLeaderboardViewController _loungeSaberLeaderboardViewController = null;
+    [Inject] private readonly LeaderboardViewController _leaderboardViewController = null;
     [Inject] private readonly InfoViewController _infoViewController = null;
     
     [UIComponent("rankingDataTabSelector")]
@@ -32,7 +32,7 @@ public class RankingDataTabSwitcherViewController : BSMLAutomaticViewController
     [UIAction("#post-parse")]
     void PostParse()
     {
-        BSMLParser.Instance.Parse(_loungeSaberLeaderboardViewController.Content, _rankingsTab, _loungeSaberLeaderboardViewController);
+        BSMLParser.Instance.Parse(_leaderboardViewController.Content, _rankingsTab, _leaderboardViewController);
         BSMLParser.Instance.Parse(_infoViewController.Content, _selfTab, _infoViewController);
         
         _rankingDataTabSelector.TextSegmentedControl.ReloadData();

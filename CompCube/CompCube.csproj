@@ -170,7 +170,6 @@
     <ItemGroup>
         <None Include="Directory.Build.props" Condition="Exists('Directory.Build.props')" />
         <None Include="Directory.Build.targets" Condition="Exists('Directory.Build.targets')" />
-        <None Include="LoungeSaber.csproj.user" Condition="Exists('LoungeSaber.csproj.user')" />
     </ItemGroup>
     <ItemGroup>
       <None Remove="UI\BSML\LoadingView.bsml" />
@@ -194,7 +193,6 @@
       <None Remove="UI\BSML\MatchResultsView.bsml" />
       <None Remove="UI\BSML\Leaderboard\LeaderboardPanelView.bsml" />
       <None Remove="UI\BSML\Leaderboard\LoungeSaberLeaderboardView.bsml" />
-      <EmbeddedResource Include="UI\BSML\Leaderboard\LoungeSaberLeaderboardView.bsml" />
       <None Remove="UI\BSML\Menu\CheckingServerStatusView.bsml" />
       <EmbeddedResource Include="UI\BSML\Menu\CheckingServerStatusView.bsml" />
       <None Remove="UI\BSML\Menu\MissingMapsView.bsml" />
@@ -207,7 +205,6 @@
       <None Remove="Resources\profile-icon.png" />
       <EmbeddedResource Include="Resources\profile-icon.png" />
       <None Remove="UI\BSML\Settings\LoungeSaberSettingsView.bsml" />
-      <EmbeddedResource Include="UI\BSML\Settings\LoungeSaberSettingsView.bsml" />
       <None Remove="UI\BSML\PauseMenu\PauseMenuView.bsml" />
       <EmbeddedResource Include="UI\BSML\PauseMenu\PauseMenuView.bsml" />
       <None Remove="UI\BSML\Disconnect\DisconnectedView.bsml" />
@@ -220,5 +217,12 @@
       <EmbeddedResource Include="UI\BSML\Events\EventWaitingOnNextMatchView.bsml" />
       <None Remove="UI\BSML\Leaderboard\RankingDataTabSwitcherView.bsml" />
       <EmbeddedResource Include="UI\BSML\Leaderboard\RankingDataTabSwitcherView.bsml" />
+      <None Remove="UI\BSML\Leaderboard\LeaderboardView.bsml" />
+      <EmbeddedResource Include="UI\BSML\Leaderboard\LeaderboardView.bsml" />
+      <None Remove="UI\BSML\Settings\SettingsView.bsml" />
+      <EmbeddedResource Include="UI\BSML\Settings\SettingsView.bsml" />
+    </ItemGroup>
+    <ItemGroup>
+      <Content Include="CompCube.csproj.user" />
     </ItemGroup>
 </Project>
