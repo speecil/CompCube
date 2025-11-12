@@ -76,6 +76,8 @@ public class DebugServerListener : IServerListener
                 OnMatchStarting?.Invoke(new MatchStartedPacket(DebugApi.Maps[0], 15,
                     10, DebugApi.DebugOpponent));
                 _siraLog.Info("voted");
+                await Task.Delay(30000);
+                OnDisconnected?.Invoke();
                 break;
             case UserPacket.UserPacketTypes.ScoreSubmission:
                 _siraLog.Info("score submitted");

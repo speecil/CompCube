@@ -10,23 +10,26 @@ namespace CompCube.Game
 {
     public class MatchManager
     {
-        [Inject] private readonly MenuTransitionsHelper _menuTransitionsHelper = null;
-        [Inject] private readonly PlayerDataModel _playerDataModel = null;
-        [Inject] private readonly SiraLog _siraLog = null;
-        [Inject] private readonly PluginConfig _config = null;
+        [Inject] private readonly MenuTransitionsHelper _menuTransitionsHelper = null!;
+        [Inject] private readonly PlayerDataModel _playerDataModel = null!;
+        [Inject] private readonly SiraLog _siraLog = null!;
+        [Inject] private readonly PluginConfig _config = null!;
          
         public bool InMatch { get; private set; } = false;
 
-        private Action<LevelCompletionResults, StandardLevelScenesTransitionSetupDataSO> _onLevelCompletedCallback;
+        private Action<LevelCompletionResults, StandardLevelScenesTransitionSetupDataSO>? _menuSwitchCallback;
         
-        private Action _menuSwitchCallback = null;
-        
-        public void StartMatch(VotingMap level, DateTime unpauseTime, bool proMode, CompCube_Models.Models.ClientData.UserInfo opponent, Action<LevelCompletionResults, StandardLevelScenesTransitionSetupDataSO> onLevelCompletedCallback)
+        public void StartMatch(
+            VotingMap level, 
+            DateTime unpauseTime, 
+            bool proMode, 
+            CompCube_Models.Models.ClientData.UserInfo opponent, 
+            Action<LevelCompletionResults, StandardLevelScenesTransitionSetupDataSO> onLevelCompletedCallback)
         {
             if (InMatch) 
                 return;
             
-            _onLevelCompletedCallback = onLevelCompletedCallback;
+            _menuSwitchCallback = onLevelCompletedCallback;
             
             InMatch = true;
             
@@ -71,14 +74,13 @@ namespace CompCube.Game
                 false,
                 true,
                 null,
-                // TODO: fix restart button being visible
                 diContainer => AfterSceneSwitchToGameplayCallback(diContainer, unpauseTime, opponent),
                 AfterSceneSwitchToMenuCallback,
                 null
             );*/
         }
 
-        public void StopMatch(Action menuSwitchCallback = null)
+        public void StopMatch(Action<LevelCompletionResults, StandardLevelScenesTransitionSetupDataSO>? menuSwitchCallback = null)
         {
             _menuSwitchCallback = menuSwitchCallback;
             
@@ -90,15 +92,7 @@ namespace CompCube.Game
         {
             InMatch = false;
             
-            _menuSwitchCallback?.Invoke();
-
-            if (_menuSwitchCallback == null)
-            {
-                _onLevelCompletedCallback?.Invoke(levelCompletionResults, standardLevelScenesTransitionSetupDataSo);
-                _onLevelCompletedCallback = null;
-                return;
-            }
-            
+            _menuSwitchCallback?.Invoke(levelCompletionResults, standardLevelScenesTransitionSetupDataSo);
             _menuSwitchCallback = null;
         }
 

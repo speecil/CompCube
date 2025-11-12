@@ -8,12 +8,10 @@ namespace CompCube.Game;
 
 public class DisconnectHandler : IInitializable, IDisposable
 {
-    [Inject] private readonly IServerListener _serverListener = null;
-    [Inject] private readonly MatchManager _matchManager = null;
+    [Inject] private readonly IServerListener _serverListener = null!;
+    [Inject] private readonly MatchManager _matchManager = null!;
     
     [CanBeNull] public event Action<string, bool> ShouldShowDisconnectScreen;
-
-    public bool WillShowDisconnectScreen { get; private set; } = false;
     
     public void Initialize()
     {
@@ -23,19 +21,16 @@ public class DisconnectHandler : IInitializable, IDisposable
 
     private void EndLevelAndShowDisconnectScreen(string reason, bool matchOnly)
     {
-        WillShowDisconnectScreen = true;
 
         if (SceneManager.GetActiveScene().name == "MainMenu")
         {
             ShouldShowDisconnectScreen?.Invoke(reason, matchOnly);
-            WillShowDisconnectScreen = false;
             return;
         }
         
-        _matchManager.StopMatch(() =>
+        _matchManager.StopMatch((levelDetails, sceneTransitionSetupData) =>
         {
             ShouldShowDisconnectScreen?.Invoke(reason, matchOnly);
-            WillShowDisconnectScreen = false;
         });
     }
 

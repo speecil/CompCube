@@ -138,9 +138,6 @@ namespace CompCube.UI.FlowCoordinators
                 _matchManager.StartMatch(packet.MapSelected, DateTime.UtcNow.AddSeconds(packet.StartingWait), _gameplaySetupViewManager.ProMode, packet.Opponent,  
                     (levelCompletionResults, standardLevelScenesTransitionSetupData) =>
                     {
-                        if (_disconnectHandler.WillShowDisconnectScreen) 
-                            return;
-                        
                         _serverListener.SendPacket(new ScoreSubmissionPacket(levelCompletionResults.multipliedScore, ScoreModel.ComputeMaxMultipliedScoreForBeatmap(standardLevelScenesTransitionSetupData.transformedBeatmapData),
                             levelCompletionResults.gameplayModifiers.proMode, levelCompletionResults.notGoodCount, levelCompletionResults.fullCombo));
                         
