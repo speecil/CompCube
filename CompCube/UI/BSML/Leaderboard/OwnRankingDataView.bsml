@@ -1,14 +1,18 @@
 ﻿<bg xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
-    xsi:noNamespaceSchemaLocation='https://monkeymanboy.github.io/BSML-Docs/BSMLSchema.xsd'>
+    xsi:noNamespaceSchemaLocation='https://monkeymanboy.github.io/BSML-Docs/BSMLSchema.xsd' size-delta-y="-15">
     <vertical active="~loading">
         <loading preserve-aspect="true"/>
     </vertical>
     
-    <vertical anchor-pos-x="0" active="~notLoading">
-        <text text="~nameText" align="MidlineLeft" italics="true"/>
-        <text text="~mmrText" align="MidlineLeft"/>
-        <text text="~rankText" align="MidlineLeft"/>
-        <text text="~winRateText" align="MidlineLeft"/>
-        <text text="~winstreakText" align="MidlineLeft"/>
+    <horizontal pref-width="90" pref-height="8" anchor-pos-y="41.5" horizontal-fit="PreferredSize" background="title-gradient" bg-color="#444444" anchor-pos-x="10">
+        <text text="Ranking" font-size="6" italics="true" all-uppercase="true" align="Midline"/>
+    </horizontal>
+    
+    <vertical anchor-pos-x="15" active="~notLoading" vertical-fit="PreferredSize" bg="round-rect-panel" bg-alpha=".65" spacing="4" anchor-pos-y="10">
+        <text text="~nameText" align="MidlineLeft" font-size="7.5"/>
+        <text text="~mmrText" align="MidlineLeft" italics="true" font-size="5"/>
+        <text text="~rankText" align="MidlineLeft" italics="true" font-size="5"/>
+        <text text="~winRateText" align="MidlineLeft" italics="true" font-size="5"/>
+        <text text="~winstreakText" align="MidlineLeft" italics="true" font-size="5"/>
     </vertical>
 </bg>

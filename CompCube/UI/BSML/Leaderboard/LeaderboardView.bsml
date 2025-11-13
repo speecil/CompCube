@@ -3,23 +3,23 @@
     <horizontal pref-width="90" pref-height="8" anchor-pos-y="41.5" horizontal-fit="PreferredSize" background="title-gradient" bg-color="#444444" anchor-pos-x="10">
         <text text="Leaderboard" font-size="6" italics="true" all-uppercase="true" align="Midline"/>
     </horizontal>
-    <horizontal horizontal-fit='PreferredSize' vertical-fit='PreferredSize' pref-width='100' pref-height='70' pad-left='7' pad-top='1'>
+    <horizontal horizontal-fit='PreferredSize' vertical-fit='PreferredSize' pref-width='100' pref-height='55' pad-left='7' pad-top='1'>
         <vertical horizontal-fit='PreferredSize' vertical-fit='PreferredSize' pref-width='9' pref-height='20'>
             <vertical-icon-segments data='cell-data' select-cell='cell-selected' id="cell-segments"/>
         </vertical>
-        <vertical active='~is-loaded' horizontal-fit='PreferredSize' vertical-fit='PreferredSize' pref-width='80' pref-height='70'>
+        <vertical active='~is-loaded' horizontal-fit='PreferredSize' vertical-fit='PreferredSize' pref-width='80' pref-height='70' child-expand-height="false" flexible-height="0">
             <custom-list cell-size="5.99" visible-cells="10" show-scrollbar="false" clickable-cells="false" align-to-center="false" id="leaderboard">
-                <vertical horizontal-fit="PreferredSize" pref-width="15" anchor-pos-x="-30">
+                <vertical horizontal-fit="PreferredSize" pref-width="15" anchor-pos-x="-30" vertical-fit="PreferredSize">
                     <text text="~rankText" align="Left" color="~leaderboardCellColor"/>
                 </vertical>
-                <vertical pref-width="20" anchor-pos-x="-15">
+                <vertical pref-width="20" anchor-pos-x="-15" vertical-fit="PreferredSize">
                     <text text="~playerNameText" align="Left" color="~leaderboardCellColor"/>
                 </vertical>
-                <vertical pref-width="10" anchor-pos-x="20">
+                <vertical pref-width="10" anchor-pos-x="20" vertical-fit="PreferredSize">
                     <text text="~mmrText" align="Right"/>
                 </vertical>
 
-                <vertical pref-width="10" anchor-pos-x="30">
+                <vertical pref-width="10" anchor-pos-x="30" vertical-fit="PreferredSize">
                     <icon-button icon="CompCube.Resources.profile-icon.png" on-click="profileButtonOnClick" pref-width="8" pref-height="8" show-underline="false"/>
                 </vertical>
             </custom-list>

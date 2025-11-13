@@ -1,6 +1,6 @@
 ﻿<bg xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
     xsi:noNamespaceSchemaLocation='https://monkeymanboy.github.io/BSML-Docs/BSMLSchema.xsd'>
-    <vertical anchor-pos-y="-35" pref-height="5" vertical-fit="PreferredSize">
+    <vertical anchor-pos-y="-30" pref-height="7.5" vertical-fit="PreferredSize" horizontal-fit="Unconstrained">
         <tab-selector tab-tag="rankingDataTabSelectorTag" id="rankingDataTabSelector" select-cell="onCellSelected"/>
     </vertical>
 

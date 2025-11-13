@@ -17,14 +17,14 @@ public class DebugApi : IApi
     ];
 
     public static readonly CompCube_Models.Models.ClientData.UserInfo DebugOpponent = new("debugOpponent", "1", 1000,
-        new DivisionInfo("Iron", 4, "#111111", false), new Badge("test", "#111111", false), 2, null,
+        new DivisionInfo("Iron", 4, "#FFFFFF", false), null, 2, null,
         false, 0, 0, 0, 0);
 
     public static readonly CompCube_Models.Models.ClientData.UserInfo Self = new(
         "self",
         "0",
         1000,
-        new DivisionInfo("Iron", 1, "#000000", false),
+        new DivisionInfo("Iron", 1, "#FFFFFF", false),
         null,
         1,
         null,
@@ -40,7 +40,7 @@ public class DebugApi : IApi
     {
         var info = new List<CompCube_Models.Models.ClientData.UserInfo>()
         {
-            DebugOpponent, Self
+            DebugOpponent, Self, DebugOpponent, Self, DebugOpponent, Self, DebugOpponent, Self, DebugOpponent, Self
         };
         return Task.FromResult(info.ToArray());
     }
