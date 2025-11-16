@@ -216,13 +216,14 @@
       <None Remove="UI\BSML\Events\EventWaitingOnNextMatchView.bsml" />
       <EmbeddedResource Include="UI\BSML\Events\EventWaitingOnNextMatchView.bsml" />
       <None Remove="UI\BSML\Leaderboard\RankingDataTabSwitcherView.bsml" />
-      <EmbeddedResource Include="UI\BSML\Leaderboard\RankingDataTabSwitcherView.bsml" />
       <None Remove="UI\BSML\Leaderboard\LeaderboardView.bsml" />
       <EmbeddedResource Include="UI\BSML\Leaderboard\LeaderboardView.bsml" />
       <None Remove="UI\BSML\Settings\SettingsView.bsml" />
       <EmbeddedResource Include="UI\BSML\Settings\SettingsView.bsml" />
       <None Remove="UI\BSML\Leaderboard\OwnRankingDataView.bsml" />
       <EmbeddedResource Include="UI\BSML\Leaderboard\OwnRankingDataView.bsml" />
+      <None Remove="UI\BSML\TabSwitcherView.bsml" />
+      <EmbeddedResource Include="UI\BSML\TabSwitcherView.bsml" />
     </ItemGroup>
     <ItemGroup>
       <Content Include="CompCube.csproj.user" />

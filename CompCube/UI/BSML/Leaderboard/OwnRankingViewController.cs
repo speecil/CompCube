@@ -7,7 +7,7 @@ using Zenject;
 namespace CompCube.UI.BSML.Leaderboard;
 
 [ViewDefinition("CompCube.UI.BSML.Leaderboard.OwnRankingDataView.bsml")]
-public class OwnRankingViewController : BSMLAutomaticViewController, Interfaces.IRefreshable
+public class OwnRankingViewController : BSMLAutomaticViewController, IRefreshableView
 {
     [Inject] private readonly IApi _api = null!;
     [Inject] private readonly IPlatformUserModel _platformUserModel = null!;
