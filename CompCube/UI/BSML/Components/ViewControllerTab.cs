@@ -20,14 +20,12 @@ public class ViewControllerTab
     {
         _host = host;
         _tabName = tabName;
+    }
 
-        if (_gameObject is null)
-        {
-            Plugin.Log.Info("go is null");
-            return;
-        }
-        
-        BSMLParser.Instance.Parse(host.Content, _gameObject, host);
+    [UIAction("#post-parse")]
+    private void PostParse()
+    {
+        BSMLParser.Instance.Parse(_host.Content, _gameObject, _host);
     }
 
     public void Refresh()
