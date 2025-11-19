@@ -30,8 +30,8 @@ public class InitialServerChecker
     
     public async Task CheckServer()
     {
-        if (!CheckFpfc())
-            return;
+        // if (!CheckFpfc())
+            // return;
         
         if (!await CheckServerState())
             return;
@@ -45,7 +45,7 @@ public class InitialServerChecker
 
     private bool CheckFpfc()
     {
-        if (_config.ConnectToDebugQueue)
+        if (_config.SkipServer)
             return true;
 
         if (!_fpfcSettings.Enabled) 

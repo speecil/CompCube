@@ -6,6 +6,7 @@ using CompCube.Configuration;
 using CompCube.Interfaces;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
+using SiraUtil.Logging;
 using Zenject;
 
 namespace CompCube.Server
@@ -13,6 +14,7 @@ namespace CompCube.Server
     public class Api : IApi, IInitializable
     {
         [Inject] private readonly PluginConfig _config = null!;
+        [Inject] private readonly SiraLog _siraLog = null!;
         
         private readonly HttpClient _client = new();
 
@@ -43,7 +45,9 @@ namespace CompCube.Server
 
         public async Task<ServerStatus?> GetServerStatus()
         {
+            // _siraLog.Info("getting server status");
             var response = await _client.GetAsync("/api/server/status");
+            // _siraLog.Info(response.Content.ReadAsStringAsync().Result);
             return response.StatusCode == HttpStatusCode.NotFound ? null : JsonConvert.DeserializeObject<ServerStatus>(await response.Content.ReadAsStringAsync());
         }
 

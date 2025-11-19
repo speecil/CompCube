@@ -66,7 +66,7 @@ namespace CompCube.Server
                 var userPlatformData = await _platformUserModel.GetUserInfo(CancellationToken.None);
                 
                 //todo: change this to not be standard by default
-                await SendPacket(new JoinRequestPacket(userPlatformData.userName, userPlatformData.platformUserId, "standard"));
+                await SendPacket(new JoinRequestPacket(userPlatformData.userName, userPlatformData.platformUserId, _config.ConnectToDebugQueue ? "debug" : "standard"));
 
                 while (!_client.GetStream().DataAvailable)
                     await Task.Delay(25);
@@ -77,9 +77,10 @@ namespace CompCube.Server
                 Array.Resize(ref bytes, bytesRead);
                 
                 _siraLog.Info(Encoding.UTF8.GetString(bytes));
-                
-                var responsePacket = Packet.Deserialize<JoinResponsePacket>(Encoding.UTF8.GetString(bytes)) ?? throw new Exception("Could not deserialize response!");
 
+                if (ServerPacket.Deserialize(Encoding.UTF8.GetString(bytes)) is not JoinResponsePacket responsePacket)
+                    return;
+                
                 onConnectedCallBack.Invoke(responsePacket);
 
                 if (responsePacket.Successful)
@@ -133,7 +134,7 @@ namespace CompCube.Server
                     
                     _siraLog.Info(json);
 
-                    var packet = Packet.Deserialize<ServerPacket>(json);
+                    var packet = ServerPacket.Deserialize(json);
 
                     switch (packet.PacketType)
                     {

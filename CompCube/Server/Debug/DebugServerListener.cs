@@ -27,6 +27,7 @@ public class DebugServerListener : IServerListener
     public event Action<EventMapSelected>? OnEventMapSelected;
     public event Action<EventMatchStartedPacket>? OnEventMatchStarted;
     public event Action<EventClosedPacket>? OnEventClosed;
+    public event Action<EventScoresUpdated>? OnEventScoresUpdated;
 
     private bool _isConnected;
     

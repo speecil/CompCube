@@ -24,7 +24,7 @@ namespace CompCube.Installers
             Container.BindInterfacesAndSelfTo<MatchManager>().AsSingle();
             Container.BindInterfacesAndSelfTo<DisconnectHandler>().AsSingle();
 
-            if (_config.ConnectToDebugQueue)
+            if (_config.SkipServer)
             {
                 Container.BindInterfacesAndSelfTo<DebugServerListener>().AsSingle();
                 Container.BindInterfacesAndSelfTo<DebugApi>().AsSingle();
