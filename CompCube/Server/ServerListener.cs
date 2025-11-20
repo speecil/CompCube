@@ -105,7 +105,7 @@ namespace CompCube.Server
 
         public void Disconnect()
         {
-            if (!_shouldListenToServer)
+            if (!Connected)
                 return;
             
             _shouldListenToServer = false;
