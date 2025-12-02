@@ -14,8 +14,13 @@ public class DebugServerListener : IServerListener
     [Inject] private readonly SiraLog _siraLog = null!;
     
     public event Action<MatchCreatedPacket>? OnMatchCreated;
-    public event Action<OpponentVotedPacket>? OnOpponentVoted;
-    public event Action<MatchStartedPacket>? OnMatchStarting;
+    public event Action<PlayerVotedPacket>? OnPlayerVoted;
+    public event Action<BeginGameTransitionPacket>? OnBeginGameTransition;
+    public event Action<RoundResultsPacket>? OnRoundResults;
+    public event Action<RoundStartedPacket>? OnRoundStarted;
+    public event Action<UserDisconnectedPacket>? OnUserDisconnected;
+    public event Action<MatchCreatedPacket>? OnMatchStarting;
+    
     public event Action<MatchResultsPacket>? OnMatchResults;
     
     public event Action? OnDisconnected;
@@ -56,26 +61,16 @@ public class DebugServerListener : IServerListener
         switch (packet.PacketType)
         {
             case UserPacket.UserPacketTypes.JoinRequest:
-                if (((JoinRequestPacket)packet).Queue == "test")
-                {
-                    await Task.Delay(5000);
-                    OnEventStarted?.Invoke(new EventStartedPacket());
-
-                    await Task.Delay(5000);
-                    OnMatchStarting?.Invoke(new MatchStartedPacket(DebugApi.Maps[0], 15,
-                        10, DebugApi.DebugOpponent));
-                    return;
-                }
-
                 await Task.Delay(1000);
-                OnMatchCreated?.Invoke(new MatchCreatedPacket(DebugApi.Maps, DebugApi.DebugOpponent));
+                OnMatchCreated?.Invoke(new MatchCreatedPacket([DebugApi.Self], [DebugApi.DebugOpponent]));
+                OnRoundStarted?.Invoke(new RoundStartedPacket(DebugApi.Maps, 30));
                 _siraLog.Info("join request");
                 break;
             case UserPacket.UserPacketTypes.Vote:
-                OnOpponentVoted?.Invoke(new OpponentVotedPacket(0));
+                OnPlayerVoted?.Invoke(new PlayerVotedPacket(0, DebugApi.DebugOpponent.UserId));
                 await Task.Delay(1000);
-                OnMatchStarting?.Invoke(new MatchStartedPacket(DebugApi.Maps[0], 15,
-                    10, DebugApi.DebugOpponent));
+                OnBeginGameTransition?.Invoke(new BeginGameTransitionPacket(DebugApi.Maps[0], 15,
+                    10));
                 _siraLog.Info("voted");
                 await Task.Delay(30000);
                 OnDisconnected?.Invoke();
@@ -83,8 +78,14 @@ public class DebugServerListener : IServerListener
             case UserPacket.UserPacketTypes.ScoreSubmission:
                 _siraLog.Info("score submitted");
                 await Task.Delay(1000);
-                OnMatchResults?.Invoke(new MatchResultsPacket(new MatchScore(DebugApi.Self, new Score(100000, 1f, true, 0, true)),
-                    new MatchScore(DebugApi.DebugOpponent, Score.Empty), 100));
+
+                var scores = new Dictionary<CompCube_Models.Models.ClientData.UserInfo, Score>
+                {
+                    { DebugApi.Self, new Score(0, 0, true, 0, true) },
+                    {DebugApi.DebugOpponent, new Score(0, 0, true, 0, true)}
+                };
+
+                OnRoundResults?.Invoke(new RoundResultsPacket(scores, 1, 1));
 
                 _siraLog.Info("match results invoked");
                 break;

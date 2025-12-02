@@ -23,8 +23,12 @@ namespace CompCube.Server
         private bool _shouldListenToServer = false;
         
         public event Action<MatchCreatedPacket>? OnMatchCreated;
-        public event Action<OpponentVotedPacket>? OnOpponentVoted;
-        public event Action<MatchStartedPacket>? OnMatchStarting;
+        public event Action<PlayerVotedPacket>? OnPlayerVoted;
+        public event Action<BeginGameTransitionPacket>? OnBeginGameTransition;
+        public event Action<RoundResultsPacket>? OnRoundResults;
+        public event Action<RoundStartedPacket>? OnRoundStarted;
+        public event Action<UserDisconnectedPacket>? OnUserDisconnected;
+        public event Action<MatchCreatedPacket>? OnMatchStarting;
         public event Action<MatchResultsPacket>? OnMatchResults;
 
         public event Action? OnDisconnected;
@@ -142,10 +146,10 @@ namespace CompCube.Server
                             OnMatchCreated?.Invoke(packet as MatchCreatedPacket);
                             break;
                         case ServerPacket.ServerPacketTypes.OpponentVoted:
-                            OnOpponentVoted?.Invoke(packet as OpponentVotedPacket);
+                            OnPlayerVoted?.Invoke(packet as PlayerVotedPacket);
                             break;
-                        case ServerPacket.ServerPacketTypes.MatchStarted:
-                            OnMatchStarting?.Invoke(packet as MatchStartedPacket);
+                        case ServerPacket.ServerPacketTypes.RoundStarted:
+                            OnRoundStarted?.Invoke(packet as RoundStartedPacket);
                             break;
                         case ServerPacket.ServerPacketTypes.MatchResults:
                             OnMatchResults?.Invoke(packet as MatchResultsPacket);
@@ -167,6 +171,15 @@ namespace CompCube.Server
                             break;
                         case ServerPacket.ServerPacketTypes.EventScoresUpdated:
                             OnEventScoresUpdated?.Invoke(packet as EventScoresUpdated);
+                            break;
+                        case ServerPacket.ServerPacketTypes.UserDisconnected:
+                            OnUserDisconnected?.Invoke(packet as UserDisconnectedPacket);
+                            break;
+                        case ServerPacket.ServerPacketTypes.RoundResults:
+                            OnRoundResults?.Invoke(packet as RoundResultsPacket);
+                            break;
+                        case ServerPacket.ServerPacketTypes.BeginGameTransition:
+                            OnBeginGameTransition?.Invoke(packet as BeginGameTransitionPacket);
                             break;
                         default:
                             throw new Exception("Could not get packet type!");

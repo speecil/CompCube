@@ -1,14 +1,19 @@
 ﻿using CompCube_Models.Models.Packets;
 using CompCube_Models.Models.Packets.ServerPackets;
 using CompCube_Models.Models.Packets.ServerPackets.Event;
+using CompCube_Models.Models.Packets.UserPackets;
 
 namespace CompCube.Interfaces;
 
 public interface IServerListener
 {
     public event Action<MatchCreatedPacket> OnMatchCreated;
-    public event Action<OpponentVotedPacket> OnOpponentVoted;
-    public event Action<MatchStartedPacket> OnMatchStarting;
+    public event Action<PlayerVotedPacket> OnPlayerVoted;
+    public event Action<BeginGameTransitionPacket> OnBeginGameTransition; 
+    public event Action<RoundResultsPacket> OnRoundResults;
+    public event Action<RoundStartedPacket> OnRoundStarted; 
+    public event Action<UserDisconnectedPacket> OnUserDisconnected; 
+    public event Action<MatchCreatedPacket> OnMatchStarting;
     public event Action<MatchResultsPacket> OnMatchResults;
     
     public event Action OnDisconnected;
