@@ -73,8 +73,6 @@ public class DebugServerListener : IServerListener
                 OnBeginGameTransition?.Invoke(new BeginGameTransitionPacket(DebugApi.Maps[0], 15,
                     10));
                 _siraLog.Info("voted");
-                await Task.Delay(30000);
-                OnDisconnected?.Invoke();
                 break;
             case UserPacket.UserPacketTypes.ScoreSubmission:
                 _siraLog.Info("score submitted");
@@ -87,6 +85,8 @@ public class DebugServerListener : IServerListener
                 };
 
                 OnRoundResults?.Invoke(new RoundResultsPacket(scores, 1, 1));
+                await Task.Delay(1);
+                OnRoundStarted?.Invoke(new RoundStartedPacket(DebugApi.Maps, 30));
 
                 _siraLog.Info("match results invoked");
                 break;

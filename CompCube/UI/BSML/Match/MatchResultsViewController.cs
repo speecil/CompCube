@@ -1,10 +1,12 @@
-﻿using System.Globalization;
+﻿using System.Collections;
+using System.Globalization;
 using BeatSaberMarkupLanguage.Attributes;
 using BeatSaberMarkupLanguage.ViewControllers;
 using CompCube_Models.Models.Match;
 using CompCube_Models.Models.Packets.ServerPackets;
 using JetBrains.Annotations;
 using CompCube.Extensions;
+using UnityEngine;
 using Zenject;
 
 namespace CompCube.UI.BSML.Match
@@ -12,7 +14,7 @@ namespace CompCube.UI.BSML.Match
     [ViewDefinition("CompCube.UI.BSML.Match.MatchResultsView.bsml")]
     public class MatchResultsViewController : BSMLAutomaticViewController
     {
-        [Inject] private readonly IPlatformUserModel _platformUserModel = null;
+        [Inject] private readonly IPlatformUserModel _platformUserModel = null!;
         
         private Action? _onContinueButtonPressedCallback = null;
         

@@ -21,6 +21,8 @@ public class StandardLevelDetailViewManager : ViewManager
         CurrentVotingMap = votingMap;
         _votingMaps = votingMaps;
         
+        _votedCallback = voteClickedCallback;
+        
         _standardLevelDetailViewController.SetData(
             votingMap.GetBeatmapLevel(), 
             true, 

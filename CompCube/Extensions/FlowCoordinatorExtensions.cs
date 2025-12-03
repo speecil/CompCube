@@ -16,8 +16,9 @@ public static class FlowCoordinatorExtensions
 
         if (flowCoordinator.topViewController == viewController)
             return;
-        
-        while (flowCoordinator.isInTransition);
+
+        if (flowCoordinator.isInTransition)
+            return;
             
         flowCoordinator.StartCoroutine(PresentViewControllerSynchronouslyCoroutine(flowCoordinator, viewController, immediately: immediately));
     }

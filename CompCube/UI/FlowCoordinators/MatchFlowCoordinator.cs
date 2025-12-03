@@ -90,7 +90,12 @@ namespace CompCube.UI.FlowCoordinators
         {
             try
             {
-                this.ReplaceViewControllerSynchronously(_opponentViewController);
+                this.ReplaceViewControllerSynchronously(_awaitingMapDecisionViewController);
+                
+                while (!_awaitingMapDecisionViewController.isActivated)
+                    await Task.Delay(25);
+                
+                _awaitingMapDecisionViewController.PopulateData(votingMap, votingMaps);
                 
                 await _serverListener.SendPacket(new VotePacket(votingMaps.IndexOf(votingMap)));
             }
@@ -112,14 +117,16 @@ namespace CompCube.UI.FlowCoordinators
             try
             {
                 this.ReplaceViewControllerSynchronously(_waitingForMatchToStartViewController);
-                await _waitingForMatchToStartViewController.PopulateData(packet.Map, DateTime.Now.AddSeconds(packet.TransitionToGameTime));
+                await _waitingForMatchToStartViewController.PopulateData(packet.Map, DateTime.UtcNow.AddSeconds(packet.TransitionToGameTime));
             
                 await Task.Delay(packet.TransitionToGameTime * 1000);
             
-                _matchManager.StartMatch(packet.Map, DateTime.Now.AddSeconds(packet.UnpauseTime), _gameplaySetupViewManager.ProMode,
+                _matchManager.StartMatch(packet.Map, DateTime.UtcNow.AddSeconds(packet.UnpauseTime), _gameplaySetupViewManager.ProMode,
                     (results, so) =>
                     {
                         this.ReplaceViewControllerSynchronously(_awaitMatchEndViewController, true);
+
+                        _serverListener.SendPacket(new ScoreSubmissionPacket(results.multipliedScore, ScoreModel.ComputeMaxMultipliedScoreForBeatmap(so.transformedBeatmapData), results.gameplayModifiers.proMode, results.notGoodCount, results.fullCombo));
                     });
             }
             catch (Exception e)
