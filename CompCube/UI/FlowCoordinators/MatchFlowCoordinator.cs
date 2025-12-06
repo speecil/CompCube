@@ -23,7 +23,7 @@ namespace CompCube.UI.FlowCoordinators
         [Inject] private readonly AwaitingMapDecisionViewController _awaitingMapDecisionViewController = null!;
         [Inject] private readonly WaitingForMatchToStartViewController _waitingForMatchToStartViewController = null!;
         [Inject] private readonly AwaitMatchEndViewController _awaitMatchEndViewController = null!;
-        [Inject] private readonly MatchResultsViewController _matchResultsViewController = null!;
+        [Inject] private readonly RoundResultsViewController _roundResultsViewController = null!;
         [Inject] private readonly OpponentViewController _opponentViewController = null!;
         
         [Inject] private readonly IServerListener _serverListener = null!;
@@ -109,9 +109,9 @@ namespace CompCube.UI.FlowCoordinators
 
         private void OnRoundResults(RoundResultsPacket results)
         {
-            this.ReplaceViewControllerSynchronously(_matchResultsViewController);
+            this.ReplaceViewControllerSynchronously(_roundResultsViewController);
             
-            _matchResultsViewController.PopulateData(results);
+            _roundResultsViewController.PopulateData(results);
             
             _opponentViewController.UpdatePoints(results.RedPoints, results.BluePoints);
         }
@@ -146,10 +146,10 @@ namespace CompCube.UI.FlowCoordinators
                 _votingScreenViewController.PopulateData(roundStartedPacket.Maps, roundStartedPacket.VotingTime);
             });
 
-            if (!_matchResultsViewController.isActivated) 
+            if (!_roundResultsViewController.isActivated) 
                 return;
             
-            _matchResultsViewController.SetContinueButtonCallback(() =>
+            _roundResultsViewController.SetContinueButtonCallback(() =>
             {
                 ResetNavigationController();
                 this.ReplaceViewControllerSynchronously(_votingScreenNavigationController);

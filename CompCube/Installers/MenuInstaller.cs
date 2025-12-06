@@ -36,7 +36,7 @@ namespace CompCube.Installers
             Container.BindInterfacesAndSelfTo<AwaitMatchEndViewController>().FromNewComponentAsViewController()
                 .AsSingle();
             Container.BindInterfacesAndSelfTo<InfoViewController>().FromNewComponentAsViewController().AsSingle();
-            Container.BindInterfacesAndSelfTo<MatchResultsViewController>().FromNewComponentAsViewController()
+            Container.BindInterfacesAndSelfTo<RoundResultsViewController>().FromNewComponentAsViewController()
                 .AsSingle();
             Container.BindInterfacesAndSelfTo<SettingsViewController>().FromNewComponentAsViewController()
                 .AsSingle();

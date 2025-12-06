@@ -11,8 +11,8 @@ using Zenject;
 
 namespace CompCube.UI.BSML.Match
 {
-    [ViewDefinition("CompCube.UI.BSML.Match.MatchResultsView.bsml")]
-    public class MatchResultsViewController : BSMLAutomaticViewController
+    [ViewDefinition("CompCube.UI.BSML.Match.RoundResultsView.bsml")]
+    public class RoundResultsViewController : BSMLAutomaticViewController
     {
         [Inject] private readonly IPlatformUserModel _platformUserModel = null!;
         
