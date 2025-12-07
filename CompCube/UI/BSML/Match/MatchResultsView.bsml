@@ -1,0 +1,22 @@
+﻿<bg xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+    xsi:noNamespaceSchemaLocation='https://monkeymanboy.github.io/BSML-Docs/BSMLSchema.xsd'>
+
+    <horizontal bg="title-gradient" background-color="~titleBgColor" horizontal-fit="PreferredSize" vertical-fit="PreferredSize" preferred-height="12" pref-width="100" anchor-pos-x="0" anchor-pos-y="27.5">
+        <text text="~titleText" font-size="10" all-uppercase="true" align="Midline" italics="true"/>
+    </horizontal>
+    
+    <horizontal anchor-pos-x="0" anchor-pos-y="10">
+        <vertical>
+            <text text="~scoreText" align="Midline" font-size="6"/>
+            <text text="~playersText" align="Midline" font-size="6"/>
+        </vertical>
+    </horizontal>
+
+    <horizontal anchor-pos-x="0" anchor-pos-y="-10">
+        <text text="~mmrChangeText" align="Midline" font-size="4.75" italics="true"/>
+    </horizontal>
+
+    <horizontal anchor-pos-x="0" anchor-pos-y="-20">
+        <primary-button text="Continue" on-click="continueButtonClicked" pref-width='34' pref-height='10'/>
+    </horizontal>
+</bg>

@@ -9,12 +9,17 @@ public class MatchStateManager : IInitializable, IDisposable
 {
     [Inject] private readonly IServerListener _serverListener = null!;
 
+    [Inject] private readonly IPlatformUserModel _platformUserModel = null!;
+
     public Dictionary<CompCube_Models.Models.ClientData.UserInfo, Team> Players { get; private set; } = new();
     
     public List<CompCube_Models.Models.ClientData.UserInfo> RedTeam => Players.Where(i => i.Value == Team.Red).Select(i => i.Key).ToList();
     public List<CompCube_Models.Models.ClientData.UserInfo> BlueTeam => Players.Where(i => i.Value == Team.Blue).Select(i => i.Key).ToList();
     
     public Dictionary<Team, int> Points { get; private set; } = new();
+
+    public Team OwnTeam => Players.First(i =>
+        i.Key.UserId == _platformUserModel.GetUserInfo(CancellationToken.None).Result.platformUserId).Value;
 
     
     public void Initialize()

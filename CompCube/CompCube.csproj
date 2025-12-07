@@ -178,6 +178,7 @@
       <None Remove="UI\BSML\Disconnect\DisconnectView.bsml" />
     </ItemGroup>
     <ItemGroup>
+      <EmbeddedResource Include="UI\BSML\Match\MatchResultsView.bsml" />
       <EmbeddedResource Include="UI\BSML\Menu\MatchmakingMenuView.bsml" />
       <None Remove="UI\BSML\MatchmakingMenuView.bsml" />
       <None Remove="UI\BSML\VotingScreenView.bsml" />

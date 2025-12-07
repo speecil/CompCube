@@ -71,6 +71,8 @@ namespace CompCube.Installers
                 .AsSingle();
             Container.BindInterfacesAndSelfTo<RankingDataTabSwitcherViewController>().FromNewComponentAsViewController().AsSingle();
             Container.BindInterfacesAndSelfTo<OwnRankingViewController>().FromNewComponentAsViewController().AsSingle();
+            Container.BindInterfacesAndSelfTo<MatchResultsViewController>().FromNewComponentAsViewController()
+                .AsSingle();
 
             Container.Bind<BSMLTag>().To<LevelBarTag>().AsSingle();
             Container.Bind<TypeHandler<CustomLevelBar>>().To<LevelBarHandler>().AsSingle();
