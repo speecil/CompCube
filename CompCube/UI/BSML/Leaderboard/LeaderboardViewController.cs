@@ -8,6 +8,7 @@ using CompCube.UI.BSML.Components;
 using HMUI;
 using IPA.Utilities;
 using CompCube.Extensions;
+using CompCube.Game;
 using CompCube.Server;
 using SiraUtil.Logging;
 using UnityEngine;
@@ -22,7 +23,7 @@ namespace CompCube.UI.BSML.Leaderboard
         [Inject] private readonly IApi _api = null;
         [Inject] private readonly SiraLog _siraLog = null;
 
-        [Inject] private readonly IPlatformUserModel _platformUserModel = null;
+        [Inject] private readonly UserModelWrapper _userModelWrapper = null;
 
         [UIParams] private readonly BSMLParserParams _parserParams = null;
         
@@ -92,7 +93,7 @@ namespace CompCube.UI.BSML.Leaderboard
         {
             _leaderboard.Data = userInfo.Select(i =>
             {
-                var leaderboardSlot = new LeaderboardSlot(i, i.UserId == _platformUserModel.GetUserInfo(CancellationToken.None).Result.platformUserId);
+                var leaderboardSlot = new LeaderboardSlot(i, i.UserId == _userModelWrapper.UserId);
                 leaderboardSlot.OnUserInfoButtonClicked += OnUserInfoButtonClicked;
                 return leaderboardSlot;
             }).ToList();
@@ -175,7 +176,7 @@ namespace CompCube.UI.BSML.Leaderboard
                     case LeaderboardStates.Self:
                         UpEnabled = false;
                         DownEnabled = false;
-                        var aroundUser = await _api.GetAroundUser(_platformUserModel.GetUserInfo(CancellationToken.None).Result.platformUserId);
+                        var aroundUser = await _api.GetAroundUser(_userModelWrapper.UserId);
                         SetLeaderboardData(aroundUser);
                         break;
                 }

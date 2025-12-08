@@ -25,6 +25,7 @@ namespace CompCube.UI.FlowCoordinators
         [Inject] private readonly AwaitMatchEndViewController _awaitMatchEndViewController = null!;
         [Inject] private readonly RoundResultsViewController _roundResultsViewController = null!;
         [Inject] private readonly OpponentViewController _opponentViewController = null!;
+        [Inject] private readonly MatchResultsViewController _matchResultsViewController = null!;
         
         [Inject] private readonly IServerListener _serverListener = null!;
         [Inject] private readonly MatchManager _matchManager = null!;
@@ -39,7 +40,6 @@ namespace CompCube.UI.FlowCoordinators
         [Inject] private readonly DisconnectFlowCoordinator _disconnectFlowCoordinator = null!;
         [Inject] private readonly DisconnectedViewController _disconnectedViewController = null!;
         
-        [Inject] private readonly IPlatformUserModel _platformUserModel = null!;
         [Inject] private readonly SoundEffectManager _soundEffectManager = null!;
 
         private NavigationController _votingScreenNavigationController;
@@ -70,6 +70,27 @@ namespace CompCube.UI.FlowCoordinators
             _serverListener.OnRoundStarted += OnRoundStarted;
             _serverListener.OnBeginGameTransition += TransitionToGame;
             _serverListener.OnRoundResults += OnRoundResults;
+            _serverListener.OnMatchResults += HandleMatchResults;
+            _disconnectHandler.ShouldShowDisconnectScreen += HandleShouldShowDisconnectScreen;
+        }
+
+        private void HandleShouldShowDisconnectScreen(string reason, bool matchOnly)
+        {
+            while (!isActivated);
+            
+            this.PresentFlowCoordinatorSynchronously(_disconnectFlowCoordinator);
+            
+            _disconnectedViewController.SetReason(reason, async void () =>
+            {
+                try
+                {
+                    await DismissChildFlowCoordinatorsRecursively();
+                }
+                catch(Exception e)
+                {
+                    _siraLog.Error(e);
+                }
+            });
         }
 
         private void HandleVotingScreenMapSelected(VotingMap votingMap, List<VotingMap> votingMaps)
@@ -114,6 +135,15 @@ namespace CompCube.UI.FlowCoordinators
             _roundResultsViewController.PopulateData(results);
             
             _opponentViewController.UpdatePoints(results.RedPoints, results.BluePoints);
+        }
+        
+        private void HandleMatchResults(MatchResultsPacket results)
+        {
+            _siraLog.Info("here");
+            this.ReplaceViewControllerSynchronously(_matchResultsViewController);
+            _siraLog.Info("here 1.5");
+            _matchResultsViewController.PopulateData(results.FinalRedScore, results.FinalBlueScore, results.MmrChange, () => _onMatchFinishedCallback?.Invoke());
+            _siraLog.Info("here 2");
         }
 
         private async void TransitionToGame(BeginGameTransitionPacket packet)
@@ -161,6 +191,12 @@ namespace CompCube.UI.FlowCoordinators
         protected override void DidDeactivate(bool removedFromHierarchy, bool screenSystemDisabling)
         {
             _votingScreenViewController.MapSelected -= HandleVotingScreenMapSelected;
+            
+            _serverListener.OnRoundStarted -= OnRoundStarted;
+            _serverListener.OnBeginGameTransition -= TransitionToGame;
+            _serverListener.OnRoundResults -= OnRoundResults;
+            _serverListener.OnMatchResults -= HandleMatchResults;
+            _disconnectHandler.ShouldShowDisconnectScreen -= HandleShouldShowDisconnectScreen;
         }
 
         private void ResetNavigationController()

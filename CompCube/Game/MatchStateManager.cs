@@ -9,7 +9,7 @@ public class MatchStateManager : IInitializable, IDisposable
 {
     [Inject] private readonly IServerListener _serverListener = null!;
 
-    [Inject] private readonly IPlatformUserModel _platformUserModel = null!;
+    [Inject] private readonly UserModelWrapper _userModelWrapper = null!;
 
     public Dictionary<CompCube_Models.Models.ClientData.UserInfo, Team> Players { get; private set; } = new();
     
@@ -19,7 +19,7 @@ public class MatchStateManager : IInitializable, IDisposable
     public Dictionary<Team, int> Points { get; private set; } = new();
 
     public Team OwnTeam => Players.First(i =>
-        i.Key.UserId == _platformUserModel.GetUserInfo(CancellationToken.None).Result.platformUserId).Value;
+        i.Key.UserId == _userModelWrapper.UserId).Value;
 
     
     public void Initialize()

@@ -8,7 +8,6 @@
     <horizontal anchor-pos-x="0" anchor-pos-y="10">
         <vertical>
             <text text="~scoreText" align="Midline" font-size="6"/>
-            <text text="~playersText" align="Midline" font-size="6"/>
         </vertical>
     </horizontal>
 

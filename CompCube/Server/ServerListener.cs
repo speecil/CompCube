@@ -6,6 +6,7 @@ using CompCube_Models.Models.Packets.ServerPackets;
 using CompCube_Models.Models.Packets.ServerPackets.Event;
 using CompCube_Models.Models.Packets.UserPackets;
 using CompCube.Configuration;
+using CompCube.Game;
 using CompCube.Interfaces;
 using SiraUtil.Logging;
 using Zenject;
@@ -41,7 +42,7 @@ namespace CompCube.Server
         public event Action<EventClosedPacket>? OnEventClosed;
         public event Action<EventScoresUpdated>? OnEventScoresUpdated;
 
-        [Inject] private readonly IPlatformUserModel _platformUserModel = null!;
+        [Inject] private readonly UserModelWrapper _userModelWrapper = null!;
 
         private bool Connected
         {
@@ -66,11 +67,9 @@ namespace CompCube.Server
             {
                 _client = new TcpClient();
                 await _client.ConnectAsync(IPAddress.Parse(_config.ServerIp), _config.ServerPort);
-
-                var userPlatformData = await _platformUserModel.GetUserInfo(CancellationToken.None);
                 
                 //todo: change this to not be standard by default
-                await SendPacket(new JoinRequestPacket(userPlatformData.userName, userPlatformData.platformUserId, _config.ConnectToDebugQueue ? "debug" : "standard"));
+                await SendPacket(new JoinRequestPacket(_userModelWrapper.UserName, _userModelWrapper.UserId, _config.ConnectToDebugQueue ? "debug" : "standard"));
 
                 while (!_client.GetStream().DataAvailable)
                     await Task.Delay(25);

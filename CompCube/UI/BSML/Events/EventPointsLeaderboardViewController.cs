@@ -4,6 +4,7 @@ using CompCube_Models.Models.Events;
 using CompCube_Models.Models.Match;
 using CompCube_Models.Models.Packets.ServerPackets.Event;
 using CompCube.Extensions;
+using CompCube.Game;
 using CompCube.Interfaces;
 using Zenject;
 
@@ -16,7 +17,7 @@ public class EventPointsLeaderboardViewController : BSMLAutomaticViewController,
     private readonly LeaderboardTableView _eventsLeaderboard = null!;
 
     [Inject] private readonly IServerListener _serverListener = null!;
-    [Inject] private readonly IPlatformUserModel _platformUserModel = null!;
+    [Inject] private readonly UserModelWrapper _userModelWrapper = null!;
 
     private List<EventScore> _scores = [];
     private readonly Dictionary<UserInfo, int> _points = new();
@@ -41,7 +42,7 @@ public class EventPointsLeaderboardViewController : BSMLAutomaticViewController,
                 new LeaderboardTableView.ScoreData(i.Score.Points, i.User.GetFormattedUserName(), i.Placement,
                     i.Score.FullCombo)).ToList();
             
-            _eventsLeaderboard.SetScores(scores, _scores.IndexOf(_scores.First(j => j.User.UserId == _platformUserModel.GetUserInfo(CancellationToken.None).Result.platformUserId)));
+            _eventsLeaderboard.SetScores(scores, _scores.IndexOf(_scores.First(j => j.User.UserId == _userModelWrapper.UserId)));
             return;
         }
         

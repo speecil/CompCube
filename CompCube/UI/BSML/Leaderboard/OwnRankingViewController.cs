@@ -1,6 +1,7 @@
 ﻿using BeatSaberMarkupLanguage.Attributes;
 using BeatSaberMarkupLanguage.ViewControllers;
 using CompCube.Extensions;
+using CompCube.Game;
 using CompCube.Interfaces;
 using Zenject;
 
@@ -10,7 +11,7 @@ namespace CompCube.UI.BSML.Leaderboard;
 public class OwnRankingViewController : BSMLAutomaticViewController, IRefreshableView
 {
     [Inject] private readonly IApi _api = null!;
-    [Inject] private readonly IPlatformUserModel _platformUserModel = null!;
+    [Inject] private readonly UserModelWrapper _userModelWrapper = null!;
     
     [UIValue("nameText")] private string NameText { get; set; } = "default";
     [UIValue("mmrText")] private string MmrText { get; set; } = "default";
@@ -37,7 +38,7 @@ public class OwnRankingViewController : BSMLAutomaticViewController, IRefreshabl
     {
         Loading = true;
 
-        var selfData = await _api.GetUserInfo((await _platformUserModel.GetUserInfo(CancellationToken.None)).platformUserId);
+        var selfData = await _api.GetUserInfo(_userModelWrapper.UserId);
         
         if (selfData == null)
             return;

@@ -24,6 +24,8 @@ namespace CompCube.Installers
             Container.BindInterfacesAndSelfTo<MatchManager>().AsSingle();
             Container.BindInterfacesAndSelfTo<DisconnectHandler>().AsSingle();
             Container.BindInterfacesAndSelfTo<MatchStateManager>().AsSingle();
+            
+            Container.BindInterfacesAndSelfTo<UserModelWrapper>().AsSingle();
 
             if (_config.SkipServer)
             {

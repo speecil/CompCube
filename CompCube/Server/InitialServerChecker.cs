@@ -1,6 +1,7 @@
 ﻿#nullable enable
 using CompCube_Models.Models.Server;
 using CompCube.Configuration;
+using CompCube.Game;
 using CompCube.Interfaces;
 using IPA.Utilities;
 using SiraUtil.Tools.FPFC;
@@ -12,7 +13,7 @@ namespace CompCube.Server;
 public class InitialServerChecker
 {
     [Inject] private readonly IApi _api = null!;
-    [Inject] private readonly IPlatformUserModel _platformUserModel = null!;
+    [Inject] private readonly UserModelWrapper _userModelWrapper = null!;
 
     [Inject] private readonly PluginConfig _config = null!;
     [Inject] private readonly IFPFCSettings _fpfcSettings = null!;
@@ -79,7 +80,7 @@ public class InitialServerChecker
     {
         ServerCheckingStateUpdated?.Invoke(ServerCheckingStates.UserData);
 
-        var userData = await _api.GetUserInfo((await _platformUserModel.GetUserInfo(CancellationToken.None)).platformUserId);
+        var userData = await _api.GetUserInfo(_userModelWrapper.UserId);
         
         if (userData != null && userData?.Banned == true)
         {
