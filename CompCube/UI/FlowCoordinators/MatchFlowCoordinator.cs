@@ -120,6 +120,8 @@ namespace CompCube.UI.FlowCoordinators
                 
                 _awaitingMapDecisionViewController.PopulateData(votingMap, votingMaps);
                 
+                _soundEffectManager.CrossfadeToDefault();
+                
                 await _serverListener.SendPacket(new VotePacket(votingMaps.IndexOf(votingMap)));
             }
             catch (Exception e)
@@ -139,11 +141,9 @@ namespace CompCube.UI.FlowCoordinators
         
         private void HandleMatchResults(MatchResultsPacket results)
         {
-            _siraLog.Info("here");
             this.ReplaceViewControllerSynchronously(_matchResultsViewController);
-            _siraLog.Info("here 1.5");
+            
             _matchResultsViewController.PopulateData(results.FinalRedScore, results.FinalBlueScore, results.MmrChange, () => _onMatchFinishedCallback?.Invoke());
-            _siraLog.Info("here 2");
         }
 
         private async void TransitionToGame(BeginGameTransitionPacket packet)

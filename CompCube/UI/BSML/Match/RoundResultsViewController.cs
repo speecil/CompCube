@@ -6,6 +6,7 @@ using CompCube_Models.Models.Match;
 using CompCube_Models.Models.Packets.ServerPackets;
 using JetBrains.Annotations;
 using CompCube.Extensions;
+using CompCube.Game;
 using UnityEngine;
 using Zenject;
 
@@ -14,6 +15,8 @@ namespace CompCube.UI.BSML.Match
     [ViewDefinition("CompCube.UI.BSML.Match.RoundResultsView.bsml")]
     public class RoundResultsViewController : BSMLAutomaticViewController
     {
+        [Inject] private readonly MatchStateManager _matchStateManager = null!;
+        
         private Action? _onContinueButtonPressedCallback = null;
         
         [UIValue("titleBgColor")] private string TitleBgColor { get; set; } = "#0000FF";
@@ -24,8 +27,8 @@ namespace CompCube.UI.BSML.Match
         
         public void PopulateData(RoundResultsPacket results)
         {
-            WinnerScoreText = FormatScore(new MatchScore(results.Scores.ElementAt(0).Key, results.Scores.ElementAt(0).Value), 1);
-            LoserScoreText = FormatScore(new MatchScore(results.Scores.ElementAt(1).Key, results.Scores.ElementAt(1).Value), 2);
+            WinnerScoreText = FormatScore(new MatchScore(_matchStateManager.Players.FirstOrDefault(i => i.Key.UserId == results.Scores.ElementAt(0).Key).Key, results.Scores.ElementAt(0).Value), 1);
+            LoserScoreText = FormatScore(new MatchScore(_matchStateManager.Players.FirstOrDefault(i => i.Key.UserId == results.Scores.ElementAt(1).Key).Key, results.Scores.ElementAt(1).Value), 2);
             
             NotifyPropertyChanged(null);
         }

@@ -29,7 +29,6 @@ namespace CompCube.Server
         public event Action<RoundResultsPacket>? OnRoundResults;
         public event Action<RoundStartedPacket>? OnRoundStarted;
         public event Action<UserDisconnectedPacket>? OnUserDisconnected;
-        public event Action<MatchCreatedPacket>? OnMatchStarting;
         public event Action<MatchResultsPacket>? OnMatchResults;
 
         public event Action? OnDisconnected;

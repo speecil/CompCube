@@ -24,16 +24,11 @@ public class MatchResultsViewController : BSMLAutomaticViewController
     public void PopulateData(int redScore, int blueScore, int mmrChange, Action continueButtonPressedCallback)
     {
         var winningTeam = redScore > blueScore ? MatchStateManager.Team.Red : MatchStateManager.Team.Blue;
-        _siraLog.Info("data 0");
         
         var won = winningTeam == _stateManager.OwnTeam;
-        _siraLog.Info("data 1");
         _continueButtonPressedCallback = continueButtonPressedCallback;
-        _siraLog.Info("data 2");
         TitleText = won ? "You Win!" : "You Lose!";
         TitleBgColor = won ? "#0000FF" : "#FF0000";
-        
-        _siraLog.Info("data 3");
         
         ScoreText = $"{redScore} -  {blueScore}";
 
@@ -41,7 +36,6 @@ public class MatchResultsViewController : BSMLAutomaticViewController
             $"You {(won ? "gained" : "lost")}: {mmrChange.ToString().FormatWithHtmlColor(won ? "#90EE90" : "#FF7F7F")} MMR";
             
         NotifyPropertyChanged(null);
-        _siraLog.Info("data 4");
     }
 
     [UIAction("continueButtonClicked")]

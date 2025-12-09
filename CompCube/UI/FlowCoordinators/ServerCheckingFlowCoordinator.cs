@@ -50,17 +50,13 @@ public class ServerCheckingFlowCoordinator : FlowCoordinator
 
     private void OnStartMapDownload(string[] missingMapHashes)
     {
-        _siraLog.Info("here 0");
         if (_config.DownloadMapsAutomatically)
         {
             UserChoseToDownloadMaps(true, missingMapHashes);
             return;
         }
         
-        _siraLog.Info("here 1");
-        
         this.ReplaceViewControllerSynchronously(_missingMapsViewController);
-        _siraLog.Info("here 2");
         _missingMapsViewController.SetMissingMapCount(missingMapHashes.Length, (choice) =>
         {
             UserChoseToDownloadMaps(choice, missingMapHashes);
