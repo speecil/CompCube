@@ -1,4 +1,6 @@
-﻿using SiraUtil.Affinity;
+﻿using CompCube.Game;
+using SiraUtil.Affinity;
+using Zenject;
 
 namespace CompCube.AffinityPatches.PausePatches
 {
@@ -8,9 +10,9 @@ namespace CompCube.AffinityPatches.PausePatches
         [AffinityPostfix]
         private void Postfix(PauseMenuManager __instance)
         {
+            __instance._restartButton.gameObject.SetActive(false);
             __instance._backButton.gameObject.SetActive(false);
             __instance._continueButton.gameObject.SetActive(false);
-            __instance._restartButton.gameObject.SetActive(false);
         }
     }
 }

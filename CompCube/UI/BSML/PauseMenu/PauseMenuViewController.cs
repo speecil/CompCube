@@ -26,7 +26,7 @@ public class PauseMenuViewController : BSMLAutomaticViewController, IInitializab
     public void Initialize()
     {
         _pauseController._gamePause.willResumeEvent += Resumed;
-        _pauseController._gamePause.didPauseEvent += Paused;
+        _pauseController.didPauseEvent += Paused;
         
         _floatingScreen.SetRootViewController(this, AnimationType.None);
         _floatingScreen.gameObject.SetActive(true);

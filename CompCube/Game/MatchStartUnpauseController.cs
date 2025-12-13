@@ -7,7 +7,7 @@ namespace CompCube.Game
 {
     public class MatchStartUnpauseController
     {
-        [Inject] private readonly PauseController _pauseController = null;
+        [Inject] private readonly PauseController _pauseController = null!;
         
         public bool StillInStartingPauseMenu { get; private set; } = true;
 

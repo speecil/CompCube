@@ -6,7 +6,7 @@ namespace CompCube.AffinityPatches.PausePatches;
 
 public class ContinuePausePatch : IAffinity
 {
-    [Inject] private readonly MatchStartUnpauseController _matchStartUnpauseController = null;
+    [Inject] private readonly MatchStartUnpauseController _matchStartUnpauseController = null!;
 
     [AffinityPatch(typeof(PauseController), nameof(PauseController.HandlePauseMenuManagerDidPressContinueButton))]
     [AffinityPrefix]
