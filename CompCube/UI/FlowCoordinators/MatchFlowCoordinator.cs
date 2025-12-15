@@ -31,6 +31,7 @@ namespace CompCube.UI.FlowCoordinators
          
         [Inject] private readonly IServerListener _serverListener = null!;
         [Inject] private readonly MatchManager _matchManager = null!;
+        [Inject] private readonly MatchStateManager _matchStateManager = null!;
         
         [Inject] private readonly SiraLog _siraLog = null!;
         
@@ -147,6 +148,10 @@ namespace CompCube.UI.FlowCoordinators
             this.ReplaceViewControllerSynchronously(_matchResultsViewController);
             
             _matchResultsViewController.PopulateData(results.FinalRedScore, results.FinalBlueScore, results.MmrChange, () => _onMatchFinishedCallback?.Invoke());
+            
+            if ((results.FinalRedScore > results.FinalBlueScore && _matchStateManager.OwnTeam == MatchStateManager.Team.Red) || 
+                (results.FinalBlueScore > results.FinalRedScore && _matchStateManager.OwnTeam == MatchStateManager.Team.Blue))
+                _soundEffectManager.PlayWinningMusic();
         }
 
         private async void TransitionToGame(BeginGameTransitionPacket packet)
@@ -158,6 +163,8 @@ namespace CompCube.UI.FlowCoordinators
                 {
                     _waitingForMatchToStartViewController.PopulateData(packet.Map, DateTime.UtcNow.AddSeconds(packet.TransitionToGameTime));
                 });
+                
+                _soundEffectManager.PlayGongSoundEffect();
             
                 await Task.Delay(packet.TransitionToGameTime * 1000);
 
