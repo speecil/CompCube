@@ -14,7 +14,7 @@ using Zenject;
 namespace CompCube.UI.BSML.Match
 {
     [ViewDefinition("CompCube.UI.BSML.Match.WaitingForMatchToStartView.bsml")]
-    public class WaitingForMatchToStartViewController : BSMLAutomaticViewController, ITickable
+    public class WaitingForMatchToStartViewController(BeatmapDataLoader beatmapDataLoader) : BSMLAutomaticViewController, ITickable
     {
         [Inject] private readonly PluginConfig _config = null!;
         [Inject] private readonly SiraLog _siraLog = null!;
@@ -79,16 +79,21 @@ namespace CompCube.UI.BSML.Match
             var beatmap = votingMap.GetBeatmapLevel();
             var key = votingMap.GetBeatmapKey();
 
-            var data = beatmap?.GetDifficultyBeatmapData(key.beatmapCharacteristic, key.difficulty);
+            var data = beatmapDataLoader.LoadBeatmapData();
+            var basicData = beatmapDataLoader.LoadBasicBeatmapData();
             
             _siraLog.Info(key.beatmapCharacteristic.serializedName + " " + key.difficulty);
 
+            var bpm = beatmap?.beatsPerMinute ?? 0;
+            var njs = 
+            var offset = 
+            
             SongDurationText = $"{(int) beatmap?.songDuration! / 60}:{(int) beatmap?.songDuration % 60}";
-            SongBpmText = Mathf.RoundToInt((float) beatmap?.beatsPerMinute).ToString();
-            SongNjsText = $"{data?.noteJumpMovementSpeed}";
-            SongNpsText = $"{(data?.notesCount / beatmap.songDuration)::F1}";
-            SongJdText = $"{data?.noteJumpStartBeatOffset}";
-            SongNoteCountText = $"{data?.notesCount}";
+            SongBpmText = Mathf.RoundToInt(bpm).ToString();
+            SongNjsText = $"{njs}";
+            SongNpsText = $"{(data?.cuttableNotesCount / beatmap.songDuration)::F1}";
+            SongJdText = $"{GetJumpDistance(bpm, njs, startOffset)}";
+            SongNoteCountText = $"{data?.cuttableNotesCount}";
             SongWallCountText = $"{data?.obstaclesCount}";
             SongBombCountText = $"{data?.bombsCount}";
             
@@ -111,8 +116,23 @@ namespace CompCube.UI.BSML.Match
                 _categorySegmentData.SetTexts(["Category: " + votingMap.Category]);
             }
         }
-        
-        
+
+        private float GetJumpDistance(float bpm, float njs, float startBeatOffset)
+        {
+            return njs * (60f / bpm) * Hjd(bpm, njs, startBeatOffset) * 2;
+
+            float Hjd(float bpm, float njs, float offset)
+            {
+                var num = 60f / bpm;
+                var hjd = 4f;
+                while (njs * num * hjd > 17.999f)
+                    hjd /= 2f;
+
+                hjd += offset;
+
+                return Math.Max(hjd, 0.25f);
+            }
+        }
 
         public void Tick()
         {
