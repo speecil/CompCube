@@ -1,5 +1,14 @@
 ﻿<bg xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
      xsi:noNamespaceSchemaLocation='https://monkeymanboy.github.io/BSML-Docs/BSMLSchema.xsd'>
+    
+    <vertical anchor-pos-y="32.5" pref-height="7.5" vertical-fit="PreferredSize">
+        <tab-selector tab-tag="tab-queues-tag" id="queueTabSelector"/>
+    </vertical>
+
+    <macro.for-each pass-back-tags="true" hosts="queueOptions">
+        <tab tab-name="~tabName" tags="tab-queues-tag"/>
+    </macro.for-each>
+    
     <vertical anchor-pos-x="0" anchor-pos-y="-15">
         <primary-button on-click="joinMatchmakingPoolButtonOnClick" text="Find Match" pref-width='34' pref-height='10' interactable="~is-not-queued"/>
     </vertical>

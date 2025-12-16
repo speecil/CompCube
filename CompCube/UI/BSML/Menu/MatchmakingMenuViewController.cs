@@ -1,11 +1,13 @@
 ﻿using System.Diagnostics;
 using BeatSaberMarkupLanguage;
 using BeatSaberMarkupLanguage.Attributes;
+using BeatSaberMarkupLanguage.Components;
 using BeatSaberMarkupLanguage.Parser;
 using BeatSaberMarkupLanguage.ViewControllers;
 using CompCube_Models.Models.Packets.ServerPackets;
 using CompCube.Configuration;
 using CompCube.Interfaces;
+using CompCube.UI.BSML.Components;
 using SiraUtil.Logging;
 using UnityEngine.UI;
 using Zenject;
@@ -26,6 +28,11 @@ namespace CompCube.UI.BSML.Menu
         public event Action? EventsButtonClicked;
 
         private bool _isQueued = false;
+        
+        [UIValue("queueOptions")] 
+        private readonly List<object> _queueOptions = [new QueueOptionTab("Casual 1v1", "standard_casual_1v1"), new QueueOptionTab("Competitive 1v1", "standard_competitive_1v1")];
+
+        [UIComponent("queueTabSelector")] private readonly TabSelector _queueTabSelector = null!;
 
         [UIValue("is-queued")]
         private bool IsInMatchmakingQueue
@@ -48,7 +55,7 @@ namespace CompCube.UI.BSML.Menu
         {
             IsInMatchmakingQueue = true;
             
-            _serverListener.Connect("standard", (response) =>
+            _serverListener.Connect(((QueueOptionTab) _queueOptions[_queueTabSelector.TextSegmentedControl.selectedCellNumber]).Queue, (response) =>
             {
                 if (response.Successful) 
                     return;
@@ -78,6 +85,14 @@ namespace CompCube.UI.BSML.Menu
         public void Initialize()
         {
             _serverListener.OnDisconnected += HandleDisconnected;
+            
+            if (!_config.ConnectToDebugQueue)
+                return;
+            
+            if (_queueOptions.Any(i => ((QueueOptionTab) i).Queue == "debug"))
+                return;
+            
+            _queueOptions.Add(new QueueOptionTab("Debug", "debug"));
         }
 
         private void HandleDisconnected() => IsInMatchmakingQueue = false;
