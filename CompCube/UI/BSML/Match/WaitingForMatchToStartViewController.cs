@@ -113,7 +113,7 @@ namespace CompCube.UI.BSML.Match
                 yield return new WaitForEndOfFrame();
                 
                 _difficultySegmentData.SetTexts([votingMap.GetBaseGameDifficultyType().Name()]);
-                _categorySegmentData.SetTexts(["Category: " + votingMap.Category]);
+                _categorySegmentData.SetTexts(["Category: " + votingMap.CategoryLabel]);
             }
         }
 

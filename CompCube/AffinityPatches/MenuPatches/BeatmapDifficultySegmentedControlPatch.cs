@@ -21,6 +21,6 @@ public class BeatmapDifficultySegmentedControlPatch : IAffinity
         
         var texts = __instance._difficultySegmentedControl._texts;
         
-        __instance._difficultySegmentedControl.SetTexts(texts.Select(i => $"{i}\n(Category: {_standardLevelDetailViewManager.CurrentVotingMap.Category})").ToList());
+        __instance._difficultySegmentedControl.SetTexts(texts.Select(i => $"{i}\n(Category: {_standardLevelDetailViewManager.CurrentVotingMap.CategoryLabel})").ToList());
     }
 }
