@@ -1,7 +1,7 @@
 ﻿<bg xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
     xsi:noNamespaceSchemaLocation='https://monkeymanboy.github.io/BSML-Docs/BSMLSchema.xsd'>
     <vertical>
-        <text text="~matchStartingTimeText" italics="true" align="Midline"/>
+        <text id="matchStartingTimeText" italics="true" align="Midline"/>
     </vertical>
 
     <vertical anchor-pos-y="-12">
