@@ -75,7 +75,7 @@ public class MatchManager
             false,
             true,
             null,
-            diContainer => AfterSceneSwitchToGameplayCallback(diContainer, unpauseTime, opponent),
+            diContainer => AfterSceneSwitchToGameplayCallback(diContainer, unpauseTime),
             AfterSceneSwitchToMenuCallback,
             null
         );*/
