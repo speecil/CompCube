@@ -5,6 +5,7 @@ using CompCube.UI.BSML.Menu;
 using CompCube.UI.FlowCoordinators.Events;
 using HMUI;
 using CompCube.Extensions;
+using CompCube.UI.BSML.EarlyLeaveWarning;
 using CompCube.UI.ViewManagers;
 using Zenject;
 
@@ -75,7 +76,7 @@ namespace CompCube.UI.FlowCoordinators
 
         protected override void BackButtonWasPressed(ViewController viewController)
         {
-            if (_matchmakingMenuViewController.IsInMatchmakingQueue)
+            if (_serverListener.Connected)
             {
                 _earlyLeaveWarningModalViewController.ParseOntoGameObject(viewController, "Are you sure you want to leave the matchmaking queue?", () =>
                 {

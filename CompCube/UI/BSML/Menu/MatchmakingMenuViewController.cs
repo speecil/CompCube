@@ -95,7 +95,7 @@ namespace CompCube.UI.BSML.Menu
             _queueOptions.Add(new QueueOptionTab("Debug", "debug"));
         }
 
-        private void HandleDisconnected() => IsInMatchmakingQueue = false;
+        private void HandleDisconnected() => NotifyPropertyChanged(null);
 
         public void Dispose()
         {
