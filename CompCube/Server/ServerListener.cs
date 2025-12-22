@@ -49,22 +49,37 @@ namespace CompCube.Server
             {
                 try
                 {
-                    var poll = _client.Client.Poll(1, SelectMode.SelectRead) && !_client.GetStream().DataAvailable;
+                    if (!_client.Connected)
+                        return false;
 
-                    return !poll;
+                    var blockingState = _client.Client.Blocking;
+                    _client.Client.Blocking = false;
+                    _client.Client.Send([], 0, SocketFlags.None);
+                    _client.Client.Blocking = blockingState;
+
+                    return true;
+                }
+                catch (SocketException e)
+                {
+                    return e.NativeErrorCode == 10035;
                 }
                 catch (Exception e)
                 {
-                    if (e is SocketException socketException)
-                        return socketException.SocketErrorCode is SocketError.WouldBlock or SocketError.Interrupted;
-                    
-                    return false;
+                    _siraLog.Error(e);
                 }
+
+                return false;
             }
         }
 
         public async Task Connect(string queue, Action<JoinResponsePacket> onConnectedCallBack)
         {
+            if (Connected)
+            {
+                _siraLog.Error("Tried to connect to server while connected!");
+                return;
+            }
+            
             try
             {
                 _client = new TcpClient();

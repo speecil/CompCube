@@ -57,6 +57,8 @@ namespace CompCube.UI.BSML.Menu
                 FailedToConnectReason = $"Reason: {response.Message}";
                 NotifyPropertyChanged(nameof(FailedToConnectReason));
             });
+            
+            NotifyPropertyChanged(null);
         }
         
         protected override void DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
@@ -85,6 +87,7 @@ namespace CompCube.UI.BSML.Menu
         public void Initialize()
         {
             _serverListener.OnDisconnected += HandleDisconnected;
+            _serverListener.OnConnected += HandleConnected;
             
             if (!_config.ConnectToDebugQueue)
                 return;
@@ -95,11 +98,17 @@ namespace CompCube.UI.BSML.Menu
             _queueOptions.Add(new QueueOptionTab("Debug", "debug"));
         }
 
+        private void HandleConnected()
+        {
+            NotifyPropertyChanged(null);
+        }
+
         private void HandleDisconnected() => NotifyPropertyChanged(null);
 
         public void Dispose()
         {
             _serverListener.OnDisconnected -= HandleDisconnected;
+            _serverListener.OnConnected -= HandleConnected;
         }
     }
 }
