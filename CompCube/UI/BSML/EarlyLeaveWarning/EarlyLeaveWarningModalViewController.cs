@@ -15,13 +15,17 @@ public class EarlyLeaveWarningModalViewController : BSMLAutomaticViewController
     
     [UIParams] private readonly BSMLParserParams _parserParams = null!;
 
-    public void ParseOntoGameObject(ViewController viewController, Action? onDisconnectButtonPressedCallback)
+    public void ParseOntoGameObject(ViewController viewController, string text, Action? onDisconnectButtonPressedCallback)
     {
         _onDisconnectButtonPressedCallback = onDisconnectButtonPressedCallback;
+
+        ModalText = text;
         
         BSMLParser.Instance.Parse(Utilities.GetResourceContent(Assembly.GetExecutingAssembly(), "CompCube.UI.BSML.EarlyLeaveWarning.EarlyLeaveWarningModalView.bsml"), viewController.gameObject, this);
         Show();
     }
+
+    [UIValue("modalText")] private string ModalText { get; set; } = "";
 
     public void Show()
     {

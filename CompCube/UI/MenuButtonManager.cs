@@ -8,9 +8,9 @@ namespace CompCube.UI
 {
     public class MenuButtonManager : IInitializable, IDisposable
     {
-        [Inject] private readonly MainFlowCoordinator _mainFlowCoordinator = null;
-        [Inject] private readonly ServerCheckingFlowCoordinator _serverCheckingFlowCoordinator = null;
-        [Inject] private readonly MenuButtons _menuButtons = null;
+        [Inject] private readonly MainFlowCoordinator _mainFlowCoordinator = null!;
+        [Inject] private readonly ServerCheckingFlowCoordinator _serverCheckingFlowCoordinator = null!;
+        [Inject] private readonly MenuButtons _menuButtons = null!;
         
         private readonly MenuButton _menuButton;
         

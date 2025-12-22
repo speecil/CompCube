@@ -58,6 +58,13 @@ namespace CompCube.UI.BSML.Menu
                 NotifyPropertyChanged(nameof(FailedToConnectReason));
             });
         }
+        
+        protected override void DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
+        {
+            base.DidActivate(firstActivation, addedToHierarchy, screenSystemEnabling);
+            
+            NotifyPropertyChanged(null);
+        }
 
         [UIAction("leaveMatchmakingPoolButtonOnClick")]
         private void HandleLeaveMatchmakingPoolButtonClicked() => _parserParams.EmitEvent("disconnectModalShowEvent");
@@ -88,7 +95,7 @@ namespace CompCube.UI.BSML.Menu
             _queueOptions.Add(new QueueOptionTab("Debug", "debug"));
         }
 
-        private void HandleDisconnected() => NotifyPropertyChanged(null);
+        private void HandleDisconnected() => IsInMatchmakingQueue = false;
 
         public void Dispose()
         {

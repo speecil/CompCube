@@ -7,9 +7,9 @@ namespace CompCube.UI.FlowCoordinators;
 
 public class InfoFlowCoordinator : FlowCoordinator
 {
-    [Inject] private readonly InfoViewController _infoViewController = null;
+    [Inject] private readonly InfoViewController _infoViewController = null!;
     
-    public event Action OnBackButtonPressed;
+    public event Action? OnBackButtonPressed;
     
     protected override void DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
     {

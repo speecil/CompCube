@@ -75,7 +75,7 @@ public class MatchManager
             false,
             true,
             null,
-            diContainer => AfterSceneSwitchToGameplayCallback(diContainer, unpauseTime, opponent),
+            diContainer => AfterSceneSwitchToGameplayCallback(diContainer, unpauseTime),
             AfterSceneSwitchToMenuCallback,
             null
         );*/
@@ -104,7 +104,7 @@ public class MatchManager
             if (!_config.ScoreSubmission)
                 diContainer.Resolve<Submission>().DisableScoreSubmission("CompCube");
                 
-            diContainer.Resolve<PauseMenuViewController>().PopulateData(unpauseTime, _matchStateManager.BlueTeam.ToArray(), _matchStateManager.BlueTeam.ToArray(), _matchStateManager.Points[MatchStateManager.Team.Red], _matchStateManager.Points[MatchStateManager.Team.Blue]);
+            diContainer.Resolve<PauseMenuViewController>().PopulateData(unpauseTime, _matchStateManager.RedTeam.ToArray(), _matchStateManager.BlueTeam.ToArray(), _matchStateManager.Points[MatchStateManager.Team.Red], _matchStateManager.Points[MatchStateManager.Team.Blue]);
                 
             var startingMenuController = diContainer.TryResolve<MatchStartUnpauseController>() ?? throw new Exception("Could not resolve StartingPauseMenuController");
                 

@@ -13,7 +13,7 @@ using Zenject;
 
 namespace CompCube.Server
 {
-    public class ServerListener : IServerListener
+    public class ServerListener : IServerListener, IDisposable
     {
         [Inject] private readonly PluginConfig _config = null!;
         [Inject] private readonly SiraLog _siraLog = null!;
@@ -71,7 +71,7 @@ namespace CompCube.Server
                 await _client.ConnectAsync(IPAddress.Parse(_config.ServerIp), _config.ServerPort);
                 
                 //todo: change this to not be standard by default
-                await SendPacket(new JoinRequestPacket(_userModelWrapper.UserName, _userModelWrapper.UserId, _config.ConnectToDebugQueue ? "debug" : "standard"));
+                await SendPacket(new JoinRequestPacket(_userModelWrapper.UserName, _userModelWrapper.UserId, queue));
 
                 while (!_client.GetStream().DataAvailable)
                     await Task.Delay(25);
@@ -193,5 +193,7 @@ namespace CompCube.Server
                 }
             }
         }
+
+        public void Dispose() => Disconnect();
     }
 }

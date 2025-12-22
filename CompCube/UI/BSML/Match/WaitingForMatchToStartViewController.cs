@@ -113,7 +113,7 @@ namespace CompCube.UI.BSML.Match
                 yield return new WaitForEndOfFrame();
                 
                 _difficultySegmentData.SetTexts([votingMap.GetBaseGameDifficultyType().Name()]);
-                _categorySegmentData.SetTexts(["Category: " + votingMap.Category]);
+                _categorySegmentData.SetTexts(["Category: " + votingMap.CategoryLabel]);
             }
         }
 
@@ -142,7 +142,7 @@ namespace CompCube.UI.BSML.Match
             if (_startTime == null)
                 return;
             
-            MatchStartTimer = $"Starting in {((int) (_startTime.Value - DateTime.UtcNow).TotalSeconds).ToString(CultureInfo.InvariantCulture)}...";
+            MatchStartTimer = $"Starting in {((int) (_startTime.Value - DateTime.UtcNow).TotalSeconds + 1).ToString(CultureInfo.InvariantCulture)}...";
             
             NotifyPropertyChanged(nameof(MatchStartTimer));
         }

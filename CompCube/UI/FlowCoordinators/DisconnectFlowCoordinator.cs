@@ -7,7 +7,7 @@ namespace CompCube.UI.FlowCoordinators;
 
 public class DisconnectFlowCoordinator : FlowCoordinator
 {
-    [Inject] private readonly DisconnectedViewController _disconnectedViewController = null;
+    [Inject] private readonly DisconnectedViewController _disconnectedViewController = null!;
     
     protected override void DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
     {

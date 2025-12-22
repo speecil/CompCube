@@ -145,8 +145,8 @@ namespace CompCube.UI.FlowCoordinators
         
         private void HandleMatchResults(MatchResultsPacket results)
         {
+            showBackButton = false;
             this.ReplaceViewControllerSynchronously(_matchResultsViewController);
-            
             _matchResultsViewController.PopulateData(results.FinalRedScore, results.FinalBlueScore, results.MmrChange, () => _onMatchFinishedCallback?.Invoke());
             
             if ((results.FinalRedScore > results.FinalBlueScore && _matchStateManager.OwnTeam == MatchStateManager.Team.Red) || 
@@ -226,7 +226,7 @@ namespace CompCube.UI.FlowCoordinators
 
         protected override void BackButtonWasPressed(ViewController viewController)
         {
-            _earlyLeaveWarningModalViewController.ParseOntoGameObject(viewController, () =>
+            _earlyLeaveWarningModalViewController.ParseOntoGameObject(viewController, "Are you sure you want to leave the match early?\nLeaving the match early could result in penalties!", () =>
             {
                 _onMatchFinishedCallback?.Invoke();
             });

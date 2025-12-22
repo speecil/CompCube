@@ -21,6 +21,7 @@ namespace CompCube.UI.FlowCoordinators
 
         [Inject] private readonly GameplaySetupViewManager _gameplaySetupViewManager = null!;
         [Inject] private readonly RankingDataTabSwitcherViewController _rankingDataTabSwitcherViewController = null!;
+        [Inject] private readonly EarlyLeaveWarningModalViewController _earlyLeaveWarningModalViewController = null!;
         
         [Inject] private readonly EventsFlowCoordinator _eventsFlowCoordinator = null!;
         
@@ -72,9 +73,18 @@ namespace CompCube.UI.FlowCoordinators
             this.PresentFlowCoordinatorSynchronously(_infoFlowCoordinator);
         }
 
-        protected override void BackButtonWasPressed(ViewController _)
+        protected override void BackButtonWasPressed(ViewController viewController)
         {
-            _serverListener.Disconnect();
+            if (_matchmakingMenuViewController.IsInMatchmakingQueue)
+            {
+                _earlyLeaveWarningModalViewController.ParseOntoGameObject(viewController, "Are you sure you want to leave the matchmaking queue?", () =>
+                {
+                    _serverListener.Disconnect();
+                    _mainFlowCoordinator.DismissAllChildFlowCoordinators();
+                });
+                return;
+            }
+                
             _mainFlowCoordinator.DismissAllChildFlowCoordinators();
         }
     }

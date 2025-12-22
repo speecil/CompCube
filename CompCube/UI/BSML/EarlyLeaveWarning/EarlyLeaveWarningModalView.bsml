@@ -1,8 +1,7 @@
 <bg xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:noNamespaceSchemaLocation='https://monkeymanboy.github.io/BSML-Docs/BSMLSchema.xsd'>
     <modal move-to-center="true" show-event="showModal" clickerino-offerino-closerino="true" hide-event="hideModal" size-delta-y="45" size-delta-x="70">
         <vertical pad-top="5">
-            <text text="Are you sure you want to leave the match early?"/>
-            <text text="Leaving the match early may result in penalties!"/>
+            <text text="~modalText"/>
             <horizontal horizontal-fit="Unconstrained">
                 <button text="Yes" on-click="onDisconnectButtonClicked"/>
                 <primary-button text="No" on-click="onContinueButtonClicked"/>
