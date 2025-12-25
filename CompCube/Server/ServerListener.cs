@@ -19,7 +19,6 @@ namespace CompCube.Server
         [Inject] private readonly SiraLog _siraLog = null!;
 
         private TcpClient _client = new();
-        private Thread? _listenerThread;
 
         private bool _shouldListenToServer = false;
         
@@ -105,11 +104,13 @@ namespace CompCube.Server
 
                 if (responsePacket.Successful)
                 {
-                    _listenerThread = new Thread(ListenToServer);
                     _shouldListenToServer = true;
-                    _listenerThread.Start();
+                    Task.Factory.StartNew(ListenToServer, TaskCreationOptions.LongRunning);
                     OnConnected?.Invoke();
+                    return;
                 }
+                
+                Disconnect();
             }
             catch (Exception e)
             {
@@ -125,87 +126,105 @@ namespace CompCube.Server
 
         public void Disconnect()
         {
+            _siraLog.Info("tried to dc");
             if (!Connected)
                 return;
+            
+            _siraLog.Info("dced");
             
             _shouldListenToServer = false;
             _client.Close();
             OnDisconnected?.Invoke();
         }
 
-        private void ListenToServer()
+        private async Task ListenToServer()
         {
             while (_shouldListenToServer)
             {
                 try
                 {
                     if (!Connected)
+                    {
+                        Disconnect();
                         return;
-                    
-                    var data = new byte[1024];
+                    }
 
-                    var bytesRead = _client.GetStream().Read(data, 0, data.Length);
-                    Array.Resize(ref data, bytesRead);
+                    var buffer = new byte[1024];
 
-                    var json = Encoding.UTF8.GetString(data);
-                    
-                    if (json == "") 
+                    _client.GetStream().Flush();
+
+                    if (!_client.GetStream().DataAvailable)
                         continue;
-                    
-                    _siraLog.Info(json);
+
+                    var bytesRead = await _client.GetStream().ReadAsync(buffer, 0, buffer.Length);
+                    Array.Resize(ref buffer, bytesRead);
+
+                    var json = Encoding.UTF8.GetString(buffer, 0, bytesRead).Trim();
+
+                    if (json.Length == 0)
+                        continue;
 
                     var packet = ServerPacket.Deserialize(json);
 
-                    switch (packet.PacketType)
-                    {
-                        case ServerPacket.ServerPacketTypes.MatchCreated:
-                            OnMatchCreated?.Invoke(packet as MatchCreatedPacket);
-                            break;
-                        case ServerPacket.ServerPacketTypes.OpponentVoted:
-                            OnPlayerVoted?.Invoke(packet as PlayerVotedPacket);
-                            break;
-                        case ServerPacket.ServerPacketTypes.RoundStarted:
-                            OnRoundStarted?.Invoke(packet as RoundStartedPacket);
-                            break;
-                        case ServerPacket.ServerPacketTypes.MatchResults:
-                            OnMatchResults?.Invoke(packet as MatchResultsPacket);
-                            break;
-                        case ServerPacket.ServerPacketTypes.PrematureMatchEnd:
-                            OnPrematureMatchEnd?.Invoke(packet as PrematureMatchEndPacket);
-                            break;
-                        case ServerPacket.ServerPacketTypes.EventStarted:
-                            OnEventStarted?.Invoke(packet as EventStartedPacket);
-                            break;
-                        case ServerPacket.ServerPacketTypes.EventMapSelected:
-                            OnEventMapSelected?.Invoke(packet as EventMapSelected);
-                            break;
-                        case ServerPacket.ServerPacketTypes.EventMatchStarted:
-                            OnEventMatchStarted?.Invoke(packet as EventMatchStartedPacket);
-                            break;
-                        case ServerPacket.ServerPacketTypes.EventClosed:
-                            OnEventClosed?.Invoke(packet as EventClosedPacket);
-                            break;
-                        case ServerPacket.ServerPacketTypes.EventScoresUpdated:
-                            OnEventScoresUpdated?.Invoke(packet as EventScoresUpdated);
-                            break;
-                        case ServerPacket.ServerPacketTypes.UserDisconnected:
-                            OnUserDisconnected?.Invoke(packet as UserDisconnectedPacket);
-                            break;
-                        case ServerPacket.ServerPacketTypes.RoundResults:
-                            OnRoundResults?.Invoke(packet as RoundResultsPacket);
-                            break;
-                        case ServerPacket.ServerPacketTypes.BeginGameTransition:
-                            OnBeginGameTransition?.Invoke(packet as BeginGameTransitionPacket);
-                            break;
-                        default:
-                            throw new Exception("Could not get packet type!");
-                    }
+                    ProcessReceivedPacket(packet);
+                }
+                catch (ObjectDisposedException)
+                {
+                    return;
                 }
                 catch (Exception e)
                 {
-                    _siraLog.Error(e);
                     Disconnect();
+                    _siraLog.Error(e);
                 }
+            }
+        }
+
+        private void ProcessReceivedPacket(ServerPacket packet)
+        {
+            switch (packet.PacketType)
+            {
+                case ServerPacket.ServerPacketTypes.MatchCreated:
+                    OnMatchCreated?.Invoke(packet as MatchCreatedPacket);
+                    break;
+                case ServerPacket.ServerPacketTypes.OpponentVoted:
+                    OnPlayerVoted?.Invoke(packet as PlayerVotedPacket);
+                    break;
+                case ServerPacket.ServerPacketTypes.RoundStarted:
+                    OnRoundStarted?.Invoke(packet as RoundStartedPacket);
+                    break;
+                case ServerPacket.ServerPacketTypes.MatchResults:
+                    OnMatchResults?.Invoke(packet as MatchResultsPacket);
+                    break;
+                case ServerPacket.ServerPacketTypes.PrematureMatchEnd:
+                    OnPrematureMatchEnd?.Invoke(packet as PrematureMatchEndPacket);
+                    break;
+                case ServerPacket.ServerPacketTypes.EventStarted:
+                    OnEventStarted?.Invoke(packet as EventStartedPacket);
+                    break;
+                case ServerPacket.ServerPacketTypes.EventMapSelected:
+                    OnEventMapSelected?.Invoke(packet as EventMapSelected);
+                    break;
+                case ServerPacket.ServerPacketTypes.EventMatchStarted:
+                    OnEventMatchStarted?.Invoke(packet as EventMatchStartedPacket);
+                    break;
+                case ServerPacket.ServerPacketTypes.EventClosed:
+                    OnEventClosed?.Invoke(packet as EventClosedPacket);
+                    break;
+                case ServerPacket.ServerPacketTypes.EventScoresUpdated:
+                    OnEventScoresUpdated?.Invoke(packet as EventScoresUpdated);
+                    break;
+                case ServerPacket.ServerPacketTypes.UserDisconnected:
+                    OnUserDisconnected?.Invoke(packet as UserDisconnectedPacket);
+                    break;
+                case ServerPacket.ServerPacketTypes.RoundResults:
+                    OnRoundResults?.Invoke(packet as RoundResultsPacket);
+                    break;
+                case ServerPacket.ServerPacketTypes.BeginGameTransition:
+                    OnBeginGameTransition?.Invoke(packet as BeginGameTransitionPacket);
+                    break;
+                default:
+                    throw new Exception("Could not get packet type!");
             }
         }
 
