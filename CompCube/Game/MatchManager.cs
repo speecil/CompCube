@@ -59,7 +59,8 @@ public class MatchManager
         );
             
         // 1.40.8
-        /*_menuTransitionsHelper.StartStandardLevel(
+        /*
+        _menuTransitionsHelper.StartStandardLevel(
             "Solo",
             level.GetBeatmapKey(),
             beatmapLevel,
@@ -78,7 +79,8 @@ public class MatchManager
             diContainer => AfterSceneSwitchToGameplayCallback(diContainer, unpauseTime),
             AfterSceneSwitchToMenuCallback,
             null
-        );*/
+        );
+        */
     }
 
     public void StopMatch(Action<LevelCompletionResults, StandardLevelScenesTransitionSetupDataSO>? menuSwitchCallback = null)

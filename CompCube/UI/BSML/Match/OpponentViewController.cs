@@ -31,4 +31,10 @@ public class OpponentViewController : BSMLAutomaticViewController
         RoundText = $"Round {round}";
         NotifyPropertyChanged(nameof(RoundText));
     }
+
+    public void SetStatus(string status)
+    {
+        RoundText = status;
+        NotifyPropertyChanged(nameof(RoundText));
+    }
 }
