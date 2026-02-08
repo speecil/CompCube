@@ -32,8 +32,16 @@ public class CustomLevelBar : MonoBehaviour
     public void Setup(VotingMap map)
     {
         SetLevelDetailObjectsActive(true);
-        
-        // cannot use BeatmapKey overload because it is broken ??
-        LevelBar.Setup(map.GetBeatmapLevel(), map.GetBaseGameDifficultyType(), map.GetBeatmapLevel()?.GetCharacteristics().First(i => i.serializedName == "Standard"));
+        if (map != null) // happens when vote is forced and player didn't vote
+        {
+            // cannot use BeatmapKey overload because it is broken ??
+            LevelBar.Setup(map.GetBeatmapLevel(), map.GetBaseGameDifficultyType(),
+                map.GetBeatmapLevel()?.GetCharacteristics().First(i => i.serializedName == "Standard"));
+        }
+        else
+        {
+            SetLevelDetailObjectsActive(false);
+            LevelBar._songNameText.text = "No Vote";
+        }
     }
 }

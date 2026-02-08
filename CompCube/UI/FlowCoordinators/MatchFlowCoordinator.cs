@@ -69,6 +69,7 @@ namespace CompCube.UI.FlowCoordinators
             _votingScreenNavigationController.PushViewController(_votingScreenViewController, null);
             
             _votingScreenViewController.MapSelected += HandleVotingScreenMapSelected;
+            _votingScreenViewController.RanOutOfTime += VotingScreenViewControllerOnRanOutOfTime;
             
             _serverListener.OnRoundStarted += OnRoundStarted;
             _serverListener.OnBeginGameTransition += TransitionToGame;
@@ -76,6 +77,8 @@ namespace CompCube.UI.FlowCoordinators
             _serverListener.OnMatchResults += HandleMatchResults;
             _disconnectHandler.ShouldShowDisconnectScreen += HandleShouldShowDisconnectScreen;
         }
+
+
 
         private void HandleShouldShowDisconnectScreen(string reason, bool matchOnly)
         {
@@ -112,7 +115,7 @@ namespace CompCube.UI.FlowCoordinators
             _soundEffectManager.PlayBeatmapLevelPreview(votingMap.GetBeatmapLevel()!);
         }
 
-        private async void HandleVoteButtonPressed(VotingMap votingMap, List<VotingMap> votingMaps)
+        private async void HandleVoteButtonPressed(VotingMap votingMap, List<VotingMap> votingMaps, bool ranOutOfTime = false)
         {
             try
             {
@@ -125,13 +128,21 @@ namespace CompCube.UI.FlowCoordinators
                 _awaitingMapDecisionViewController.PopulateData(votingMap, votingMaps);
                 
                 _soundEffectManager.CrossfadeToDefault();
-                
-                await _serverListener.SendPacket(new VotePacket(votingMaps.IndexOf(votingMap)));
+
+                if (!ranOutOfTime)
+                {
+                    await _serverListener.SendPacket(new VotePacket(votingMaps.IndexOf(votingMap)));
+                }
             }
             catch (Exception e)
             {
                 _siraLog.Error(e);
             }
+        }
+        
+        private void VotingScreenViewControllerOnRanOutOfTime(List<VotingMap> votingMaps)
+        {
+            HandleVoteButtonPressed(null!, votingMaps);
         }
 
         private void OnRoundResults(RoundResultsPacket results)
@@ -147,6 +158,9 @@ namespace CompCube.UI.FlowCoordinators
         {
             // garbage
             _disconnectHandler.ShouldShowDisconnectScreen -= HandleShouldShowDisconnectScreen;
+            
+            _opponentViewController.UpdatePoints(results.FinalRedScore, results.FinalBlueScore);
+            _opponentViewController.SetStatus("Match Concluded!");
             
             showBackButton = false;
             this.ReplaceViewControllerSynchronously(_matchResultsViewController);

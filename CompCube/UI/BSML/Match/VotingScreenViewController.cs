@@ -94,16 +94,15 @@ public class VotingScreenViewController : BSMLAutomaticViewController
             _log.Notice("Counting down");
             while (true)
             {
-                if (_timeWhenCountdownWillEnd != null)
-                {
-                    var remaining = _timeWhenCountdownWillEnd.Value! - DateTime.Now;
-                    
-                    if (remaining.TotalSeconds <= 0)
-                        break;
+                if (_timeWhenCountdownWillEnd == null)
+                    yield return null;
+                
+                var remaining = (_timeWhenCountdownWillEnd ?? DateTime.Now.AddSeconds(10)) - DateTime.Now;
+                if (remaining.TotalSeconds <= 0)
+                    break;
 
-                    _voteStatusText.text =
-                        $"Please vote on a map to play!\nTime left: {Mathf.CeilToInt((float)remaining.TotalSeconds)}";
-                }
+                _voteStatusText.text =
+                    $"Please vote on a map to play!\nTime left: {Mathf.CeilToInt((float)remaining.TotalSeconds)}";
 
                 yield return null;
             }
