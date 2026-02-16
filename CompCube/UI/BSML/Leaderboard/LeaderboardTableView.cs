@@ -194,7 +194,7 @@ public class PlayerCellDataSource : MonoBehaviour, TableView.IDataSource
         string divisionText = $"<color={user.Division.Color}>{user.Division.Division}</color> {user.Mmr} MMR";
 
         int losses = user.TotalGames - user.Wins;
-        string recordText = $"{user.Wins}W / {losses}L";
+        string recordText = $"{user.Wins}<color=green>W</color> / {losses}<color=red>L</color>";
 
         cell._songNameText.SetText(name);
         cell._songAuthorText.SetText(divisionText);
