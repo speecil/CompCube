@@ -22,6 +22,7 @@ namespace CompCube.UI.BSML.Leaderboard
         [Inject] private readonly PlatformLeaderboardViewController _platformLeaderboardViewController = null;
         [Inject] private readonly IApi _api = null;
         [Inject] private readonly SiraLog _siraLog = null;
+        [Inject] private readonly DiContainer _container = null;
 
         [Inject] private readonly UserModelWrapper _userModelWrapper = null;
 
@@ -34,8 +35,19 @@ namespace CompCube.UI.BSML.Leaderboard
             {
                 IsLoaded = false;
                 
-                var topOfLeaderboard = await _api.GetLeaderboardRange(0, 10);
-                SetLeaderboardData(topOfLeaderboard);
+                _playerCellDataSource = _container.InstantiateComponent<PlayerCellDataSource>(gameObject);
+                leaderboardTableData.TableView.SetDataSource(_playerCellDataSource, true);
+
+                _playerCellDataSource.Init(leaderboardTableData.TableView);
+
+                Destroy(leaderboardTableData);
+
+                _playerCellDataSource.TableView.didSelectCellWithIdxEvent += TableView_didSelectCellWithIdxEvent;
+                
+                _pageNumber = 0;
+                _noMorePlayers = false;
+
+                await FetchNextPage();
             }
             catch (Exception e)
             {
@@ -65,6 +77,11 @@ namespace CompCube.UI.BSML.Leaderboard
             NotifyPropertyChanged(null);
         }
 
+        private void TableView_didSelectCellWithIdxEvent(TableView view, int idx)
+        {
+            OnUserInfoButtonClicked(_playerCellDataSource.Data[idx]);
+        }
+
         #endregion
         
         #region Leaderboard
@@ -85,51 +102,127 @@ namespace CompCube.UI.BSML.Leaderboard
         [UIValue("is-loading")]
         private bool IsLoading => !IsLoaded;
 
-        [UIComponent("leaderboard")] private readonly CustomCellListTableData _leaderboard = null;
+        [UIComponent("leaderboardTableView")]
+        private readonly CustomListTableData leaderboardTableData = null;
+        
+        [UIComponent("leaderboardTableView")]
+        internal readonly Transform leaderboardTransform = null;
+        
+        internal PlayerCellDataSource _playerCellDataSource = null;
 
         [UIValue("cell-data")] private readonly List<IconSegmentedControl.DataItem> _cellData = new(){};
 
-        private void SetLeaderboardData(CompCube_Models.Models.ClientData.UserInfo[] userInfo)
+        private void SetLeaderboardData(CompCube_Models.Models.ClientData.UserInfo[] userInfo, bool isAppend = false)
         {
-            _leaderboard.Data = userInfo.Select(i =>
+            if (userInfo == null || userInfo.Length == 0)
             {
-                var leaderboardSlot = new LeaderboardSlot(i, i.UserId == _userModelWrapper.UserId);
-                leaderboardSlot.OnUserInfoButtonClicked += OnUserInfoButtonClicked;
-                return leaderboardSlot;
-            }).ToList();
-            
-            _leaderboard.TableView.ReloadData();
+                _noMorePlayers = true;
+                return;
+            }
+
+            if (isAppend)
+                _playerCellDataSource.AddData(userInfo.ToList());
+            else
+                _playerCellDataSource.SetData(userInfo.ToList());
+
             IsLoaded = true;
         }
 
-        private bool _upEnabled = false;
+        
+        private async void ScrollView_scrollPositionChangedEvent(float position)
+        {
+            if (position <= 0f)
+            {
+                return;
+            }
 
-        [UIValue("up-enabled")]
-        private bool UpEnabled
-        {
-            get => _upEnabled;
-            set
+
+            if (_noMorePlayers)
             {
-                _upEnabled = value;
-                NotifyPropertyChanged(null);
+                return;
+            }
+
+
+            if (_isFetchingLeaderboard)
+            {
+                return;
+            }
+
+            if (Time.unscaledTime - _lastScrollTriggerTime < ScrollTriggerCooldown)
+            {
+                return;
+            }
+
+            var withinTwo =
+                _playerCellDataSource.TableView.visibleCells
+                    .Any(cell => cell.idx >= _playerCellDataSource.Data.Count - 3);
+
+            if (!withinTwo)
+            {
+                return;
+            }
+
+            _lastScrollTriggerTime = Time.unscaledTime;
+            
+            await FetchNextPage();
+        }
+        
+        private async Task FetchNextPage()
+        {
+            if (_noMorePlayers)
+                return;
+
+            try
+            {
+                _isFetchingLeaderboard = true;
+
+                int start = _pageNumber * PageSize;
+
+                CompCube_Models.Models.ClientData.UserInfo[] result;
+
+                result = await _api.GetLeaderboardRange(start, PageSize);
+
+                if (result == null || result.Length == 0)
+                {
+                    _noMorePlayers = true;
+                    return;
+                }
+
+                if (_pageNumber == 0)
+                    _playerCellDataSource.SetData(result.ToList());
+                else
+                    _playerCellDataSource.AddData(result.ToList());
+
+                _pageNumber++;
+                IsLoaded = true;
+            }
+            catch (Exception e)
+            {
+                _siraLog.Warn($"Leaderboard fetch failed: {e.Message}");
+                _noMorePlayers = true;
+            }
+            finally
+            {
+                _isFetchingLeaderboard = false;
             }
         }
         
-        private bool _downEnabled = true;
-        
-        [UIValue("down-enabled")]
-        private bool DownEnabled
-        {
-            get => _downEnabled;
-            set
+        private void Update() {
+            if (_playerCellDataSource.TableView.scrollView != null)
             {
-                _downEnabled = value;
-                NotifyPropertyChanged(null);
+                ScrollView_scrollPositionChangedEvent(_playerCellDataSource.TableView.scrollView.position);
             }
         }
         
+        private bool _isFetchingLeaderboard = false;
+        private bool _noMorePlayers = false;
+        private float _lastScrollTriggerTime = 0f;
+        private const float ScrollTriggerCooldown = 1.5f;
+
+        private const int PageSize = 10;
+
         private int _pageNumber = 0;
-
+        
         private enum LeaderboardStates
         {
             Global,
@@ -168,14 +261,12 @@ namespace CompCube.UI.BSML.Leaderboard
                 switch (state)
                 {
                     case LeaderboardStates.Global:
-                        UpEnabled = false;
-                        DownEnabled = true;
+                        _noMorePlayers = false;
                         var topOfLeaderboard = await _api.GetLeaderboardRange(1, 10);
                         SetLeaderboardData(topOfLeaderboard);
                         break;
                     case LeaderboardStates.Self:
-                        UpEnabled = false;
-                        DownEnabled = false;
+                        _noMorePlayers = true;
                         var aroundUser = await _api.GetAroundUser(_userModelWrapper.UserId);
                         SetLeaderboardData(aroundUser);
                         break;
@@ -189,43 +280,6 @@ namespace CompCube.UI.BSML.Leaderboard
             }
         }
 
-        [UIAction("up-clicked")]
-        private async void OnUpClicked()
-        {
-            try
-            {
-                IsLoaded = false;
-                _pageNumber--;
-            
-                var leaderboardData = await _api.GetLeaderboardRange(_pageNumber * 10, 10);
-                SetLeaderboardData(leaderboardData);
-                if (_pageNumber == 0) 
-                    UpEnabled = false;
-            }
-            catch (Exception e)
-            {
-                _siraLog.Error(e);
-            }
-        }
-
-        [UIAction("down-clicked")]
-        private async void DownClicked()
-        {
-            try
-            {
-                IsLoaded = false;
-                _pageNumber++;
-            
-                var leaderboardData = await _api.GetLeaderboardRange(_pageNumber * 10, 10);
-                SetLeaderboardData(leaderboardData);
-                if (leaderboardData?.Length < 10)
-                    DownEnabled = false;
-            }
-            catch (Exception e)
-            {
-                _siraLog.Error(e);
-            }
-        }
         #endregion
 
         public void Initialize()
@@ -237,7 +291,6 @@ namespace CompCube.UI.BSML.Leaderboard
         public void Refresh()
         {
             this.SetLeaderboardState(LeaderboardStates.Global);
-            _siraLog.Info("hello");
         }
     }
 }

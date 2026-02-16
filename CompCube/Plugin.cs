@@ -21,7 +21,7 @@ namespace CompCube
         {
             Instance = this;
             Log = logger;
-
+            zenjector.UseHttpService();
             zenjector.UseLogger(logger);
             zenjector.UseMetadataBinder<Plugin>();
 
