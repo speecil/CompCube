@@ -65,6 +65,6 @@ public class DebugApi : IApi
     public async Task<EventData[]?> GetEvents()
     {
         await Task.Delay(500);
-        return [new EventData("test", "test event", "test desc", true)];
+        return [];
     }
 }
