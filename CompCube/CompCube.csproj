@@ -234,7 +234,6 @@
       <None Remove="UI\BSML\Settings\SettingsView.bsml" />
       <EmbeddedResource Include="UI\BSML\Settings\SettingsView.bsml" />
       <None Remove="UI\BSML\Leaderboard\OwnRankingDataView.bsml" />
-      <EmbeddedResource Include="UI\BSML\Leaderboard\OwnRankingDataView.bsml" />
       <None Remove="UI\BSML\TabSwitcherView.bsml" />
       <EmbeddedResource Include="UI\BSML\TabSwitcherView.bsml" />
       <None Remove="UI\BSML\Events\EventLeaderboardView.bsml" />

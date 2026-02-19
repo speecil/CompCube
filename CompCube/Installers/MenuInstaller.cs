@@ -41,7 +41,7 @@ namespace CompCube.Installers
                 .AsSingle();
             Container.BindInterfacesAndSelfTo<SettingsViewController>().FromNewComponentAsViewController()
                 .AsSingle();
-            Container.BindInterfacesAndSelfTo<UI.BSML.Leaderboard.LeaderboardViewController>().FromNewComponentAsViewController().AsSingle();
+            Container.BindInterfacesAndSelfTo<UI.BSML.Leaderboard.CompCubeLeaderboardViewController>().FromNewComponentAsViewController().AsSingle();
             Container.BindInterfacesAndSelfTo<CantConnectToServerViewController>().FromNewComponentAsViewController().AsSingle();
             Container.BindInterfacesAndSelfTo<CheckingServerStatusViewController>().FromNewComponentAsViewController().AsSingle();
             Container.BindInterfacesAndSelfTo<MissingMapsViewController>().FromNewComponentAsViewController().AsSingle();
@@ -70,8 +70,6 @@ namespace CompCube.Installers
             Container.BindInterfacesAndSelfTo<EventWaitingOnNextMatchViewController>().FromNewComponentAsViewController().AsSingle();
             Container.BindInterfacesAndSelfTo<InEventFlowCoordinator>().FromNewComponentOnNewGameObject()
                 .AsSingle();
-            Container.BindInterfacesAndSelfTo<RankingDataTabSwitcherViewController>().FromNewComponentAsViewController().AsSingle();
-            Container.BindInterfacesAndSelfTo<OwnRankingViewController>().FromNewComponentAsViewController().AsSingle();
             Container.BindInterfacesAndSelfTo<MatchResultsViewController>().FromNewComponentAsViewController()
                 .AsSingle();
             Container.BindInterfacesAndSelfTo<EarlyLeaveWarningModalViewController>().FromNewComponentAsViewController()

@@ -21,7 +21,7 @@ namespace CompCube.UI.FlowCoordinators
         [Inject] private readonly MatchmakingMenuViewController _matchmakingMenuViewController = null!;
 
         [Inject] private readonly GameplaySetupViewManager _gameplaySetupViewManager = null!;
-        [Inject] private readonly RankingDataTabSwitcherViewController _rankingDataTabSwitcherViewController = null!;
+        [Inject] private readonly CompCubeLeaderboardViewController _leaderboardViewController = null!;
         [Inject] private readonly EarlyLeaveWarningModalViewController _earlyLeaveWarningModalViewController = null!;
         
         [Inject] private readonly EventsFlowCoordinator _eventsFlowCoordinator = null!;
@@ -30,7 +30,7 @@ namespace CompCube.UI.FlowCoordinators
         {
             showBackButton = true;
             SetTitle("CompCube");
-            ProvideInitialViewControllers(_matchmakingMenuViewController, rightScreenViewController: _rankingDataTabSwitcherViewController, leftScreenViewController: _gameplaySetupViewManager.ManagedController);
+            ProvideInitialViewControllers(_matchmakingMenuViewController, rightScreenViewController: _leaderboardViewController, leftScreenViewController: _gameplaySetupViewManager.ManagedController);
         }
 
         private void OnMatchCreated(MatchCreatedPacket packet)

@@ -12,12 +12,13 @@ using CompCube.Game;
 using CompCube.Server;
 using SiraUtil.Logging;
 using UnityEngine;
+using UnityEngine.UI;
 using Zenject;
 
 namespace CompCube.UI.BSML.Leaderboard
 {
     [ViewDefinition("CompCube.UI.BSML.Leaderboard.LeaderboardView.bsml")]
-    public class LeaderboardViewController : BSMLAutomaticViewController, IInitializable, IRefreshableView
+    public class CompCubeLeaderboardViewController : BSMLAutomaticViewController, IInitializable, IRefreshableView
     {
         [Inject] private readonly PlatformLeaderboardViewController _platformLeaderboardViewController = null;
         [Inject] private readonly IApi _api = null;
@@ -33,6 +34,9 @@ namespace CompCube.UI.BSML.Leaderboard
         {
             try
             {
+                _profilePicture.material = Resources.FindObjectsOfTypeAll<Material>()
+                    .FirstOrDefault(m => m.name == "UINoGlowRoundEdge");
+                
                 IsLoaded = false;
                 
                 _playerCellDataSource = _container.InstantiateComponent<PlayerCellDataSource>(gameObject);
@@ -57,22 +61,28 @@ namespace CompCube.UI.BSML.Leaderboard
 
         #region UserInfo Modal
 
+        [UIComponent("profilePicture")] private readonly Image _profilePicture = null!;
+        
+        [UIValue("profilePictureLink")] private string ProfilePictureLink { get; set; } = string.Empty;
         [UIValue("profileNameText")] private string ProfileNameText { get; set; } = string.Empty;
         [UIValue("profileMmrText")] private string ProfileMmrText { get; set; } = string.Empty;
         [UIValue("profileDivisionText")] private string ProfileDivisionText { get; set; } = string.Empty;
         [UIValue("profileRankText")] private string ProfileRankText { get; set; } = string.Empty;
-        [UIValue("profilePlayedMatches")] private string ProfilePlayedMatches { get; set; } = string.Empty;
+        [UIValue("winRate")] private string WinRateText { get; set; } = string.Empty;
+        [UIValue("winStreak")] private string WinStreakText { get; set; } = string.Empty;
         
         private void OnUserInfoButtonClicked(CompCube_Models.Models.ClientData.UserInfo userInfo)
         {
             _parserParams.EmitEvent("profileModalShow");
-
+            
+            ProfilePictureLink = userInfo.ProfilePictureLink;
             ProfileNameText = $"{userInfo.GetFormattedUserName()}'s Profile";
             ProfileMmrText = "MMR: ".FormatWithHtmlColor("#6F6F6F") + $"{userInfo.Mmr.ToString().FormatWithHtmlColor(userInfo.Division.Color)}";
             ProfileDivisionText =
                 "Division: ".FormatWithHtmlColor("#6F6F6F") + $"{userInfo.Division.Division} {userInfo.Division.SubDivision}".FormatWithHtmlColor(userInfo.Division.Color);
             ProfileRankText = "Rank: ".FormatWithHtmlColor("#6F6F6F") + $"{userInfo.Rank}";
-            ProfilePlayedMatches = "Matches Played:".FormatWithHtmlColor("#6F6F6F");
+            WinRateText = "Wins: ".FormatWithHtmlColor("#6F6F6F") + $"{userInfo.Wins}" + "/".FormatWithHtmlColor("#6F6F6F") + $"{userInfo.TotalGames}";
+            WinStreakText = "Win Streak: ".FormatWithHtmlColor("#6F6F6F") + $"{userInfo.Winstreak}" + " (Best: ".FormatWithHtmlColor("#6F6F6F") + $"{userInfo.HighestWinstreak}" + ")".FormatWithHtmlColor("#6F6F6F");
             
             NotifyPropertyChanged(null);
         }
