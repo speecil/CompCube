@@ -11,16 +11,20 @@ using Zenject;
 
 namespace CompCube.Server
 {
-    public class Api : IApi, IInitializable
+    public class Api : IApi
     {
-        [Inject] private readonly PluginConfig _config = null!;
-        [Inject] private readonly SiraLog _siraLog = null!;
-        
-        private readonly HttpClient _client = new();
+        private readonly HttpClient _client;
 
-        public void Initialize()
+        public Api(PluginConfig config)
         {
-            _client.BaseAddress = new Uri($"https://{_config.ServerIp}:{_config.ServerApiPort}/");
+            
+            var handler = new HttpClientHandler();
+            
+            if (config.SkipServerCertificateValidation)
+                handler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true;
+            
+            _client = new HttpClient(handler);
+            _client.BaseAddress = new Uri($"https://{config.ServerIp}:{config.ServerApiPort}/");
         }
 
         public async Task<CompCube_Models.Models.ClientData.UserInfo?> GetUserInfo(string id)

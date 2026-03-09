@@ -28,9 +28,6 @@ namespace CompCube
             zenjector.Install<AppInstaller>(Location.App, config.Generated<PluginConfig>());
             zenjector.Install<MenuInstaller>(Location.Menu);
             zenjector.Install<GameInstaller>(Location.StandardPlayer);
-            
-            //TODO: do NOT ship this in end product, figure out a real solution and use this for debugging
-            System.Net.ServicePointManager.ServerCertificateValidationCallback = (message, cert, chain, sslPolicyErrors) => true;
         }
     }
 }

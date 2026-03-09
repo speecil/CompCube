@@ -17,5 +17,7 @@ namespace CompCube.Configuration
 
         public virtual bool ConnectToDebugQueue { get; set; } = false;
         public virtual bool SkipServer { get; set; } = false;
+        
+        public virtual bool SkipServerCertificateValidation { get; set; } = false;
     }
 }
